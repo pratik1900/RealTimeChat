@@ -1,0 +1,98 @@
+.LoginForm {
+  display: flex;
+  flex-direction: column;
+  width: 35%;
+  margin: auto;
+  align-items: center;
+  margin-top: 7%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border-radius: 20px;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.7),
+              -5px -5px 10px rgba(255,255,255,0.1);
+}
+
+.LoginForm input {
+  margin: 10px 0;
+  width: 60%;
+  padding: 20px;
+  border-radius: 50px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.7),
+              -2px -2px 5px rgba(255,255,255,0.1);
+  background: transparent;
+  color: cornsilk;
+}
+
+.LoginForm input:focus {
+  box-shadow: inset 3px 3px 5px rgba(0,0,0,0.7),
+              inset -2px -2px 5px rgba(255,255,255,0.1);
+}
+
+/* Placeholder Color Change */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: cornsilk;
+  font-family: monospace;
+  font-size: 22px;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+  font-family: monospace;
+  font-size: 22px;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+  font-family: monospace;
+  font-size: 22px;
+}
+/* Placeholder Color Change */
+
+
+.FormHeader{
+  padding-bottom: 5%;
+  font-family: monospace;
+  font-size: xx-large;
+}
+
+.LoginForm button {
+  margin-top: 15px;
+  padding: 20px;
+  font-family: monospace;
+  font-size: 24px;
+  font-weight: 700;
+  background-color: inherit;
+  border-radius: 50px;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  transition: 0.2s ease-out;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.7),
+            -2px -2px 5px rgba(255,255,255,0.2);
+}
+
+.LoginForm button:hover {
+  transform: scale(1.05);
+    box-shadow: 5px 5px 7px rgba(0,0,0,0.7),
+              -3px -3px 7px rgba(255,255,255,0.2);
+}
+
+.LoginForm button:active{
+    box-shadow: inset 3px 3px 5px rgba(0,0,0,0.7),
+            inset -2px -2px 5px rgba(255,255,255,0.2);
+}
+
+.error {
+  color: red;
+  font-size: 20px;
+  font-weight: 400;
+  text-align: left;
+}
+
+body {
+  background-color: rgb(109, 99, 99);
+}

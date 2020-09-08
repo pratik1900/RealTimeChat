@@ -1,0 +1,17 @@
+.NavLink {
+  display: inline !important;
+  text-decoration: none;
+  color: white;
+  font-family: monospace;
+  font-size: x-large;
+}
+
+.active {
+  color: orangered;
+}
+
+.NavItem {
+  list-style: none;
+  display: inline;
+  margin: 0 10px;
+}

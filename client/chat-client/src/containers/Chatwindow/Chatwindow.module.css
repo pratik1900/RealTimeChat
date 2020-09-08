@@ -1,0 +1,37 @@
+.Chatwindow {
+  width: 100%;
+  margin-bottom: 50px;
+  position: fixed;
+  bottom: 50px;
+}
+
+.textForm {
+  display: flex;
+  justify-content: space-around;
+}
+
+.textBox {
+  width: 80%;
+  height: 50px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+
+.sendButton {
+  padding: 0 50px;
+  border-radius: 7px;
+  border: 1px;
+  cursor: pointer;
+  background: orangered;
+  transition: 0.1s ease-in;
+  font-family: monospace;
+  font-size: x-large;
+}
+
+.sendButton:hover {
+  background-color: rgb(156, 43, 2)
+}
+
+body {
+  background-color: #191A1C !important;
+}
