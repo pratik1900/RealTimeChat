@@ -17,7 +17,7 @@ socket.on("login", data => {
 
 class App extends Component {
   componentDidMount() {
-    axios.get("http://localhost:5000/")
+    axios.get("http://localhost:5000/", { withCredentials: true })
     .then(result => {
       console.log(result.data);
     });

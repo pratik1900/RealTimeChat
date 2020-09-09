@@ -12,7 +12,6 @@ const User = require('./models/user');
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: true })); //use before routes
-app.use(routes);
 
 
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.efyra.mongodb.net/<dbname>?retryWrites=true&w=majority`;
@@ -27,20 +26,23 @@ app.use(session({
   secret: process.env.SESSION_SECRET, 
   resave: false, 
   saveUninitialized: false, 
-  // cookie: {
-  //   maxAge: 24 * 60 * 60 * 1000,
-  //   httpOnly: true, 
-  //   secure: true
-  // },
-  // store: store
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true, 
+    secure: true
+  },
+  store: store
 }));
+
+app.use(routes);
+
 
 // --*--
 
-// app.use((req, res, next) => {
-//   console.log(req.session);
-//   next();
-// })
+app.use((req, res, next) => {
+  console.log(req.cookies);
+  next();
+})
 
 
 
