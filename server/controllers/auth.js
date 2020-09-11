@@ -58,6 +58,7 @@ module.exports.postLogin = (req, res) => {
           // const cookieValue = `acessToken=${token}`;
           // res.setHeader('Set-Cookie', cookieValue).json({msg: 'JWT Set'});
           req.session.user = user
+          res.json({msg: 'Done'})
         }
       })
       .catch(err => {

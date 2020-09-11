@@ -17,10 +17,11 @@ socket.on("login", data => {
 
 class App extends Component {
   componentDidMount() {
-    axios.get("http://localhost:5000/", { withCredentials: true })
+    axios.get("http://localhost:5000/")
     .then(result => {
       console.log(result.data);
-    });
+    })
+    .catch(console.log('GOTChA!!!'));
   }
   render() {
     return (
