@@ -48,17 +48,12 @@ module.exports.postLogin = (req, res) => {
       bcrypt.compare(req.body.password, user.password)
       .then(doMatch => {
         if(doMatch){
-          const payload = {
-            username: user.username,
-            email: user.email,
-            password: user.password
-          }
-          // const token = jwt.sign(payload, process.env.PASSPORT_JWT_SECRET);
-          // res.json({accessToken: token});
-          // const cookieValue = `acessToken=${token}`;
-          // res.setHeader('Set-Cookie', cookieValue).json({msg: 'JWT Set'});
-          req.session.user = user
+          req.session.user = user._id
+          req.session.isLoggedIn = true
+          req.session.save()
           res.json({msg: 'Done'})
+        } else {
+          res.status(401).json({error: { field: 'password', msg: 'Wrong Password' } });
         }
       })
       .catch(err => {

@@ -55,11 +55,21 @@ class Login extends Component {
       } 
       else {
         //validation pass
-        console.log(result);
+        console.log('validation pass!');
+        if(result.status === 401 && result.error) {
+          this.setState({
+            [result.error.field] : result.error.msg
+          })
+        }
         
       }
     })
-    .catch(err => console.log("ERROR", err))
+    .catch(err => {
+      for(let i in err){
+        console.log(i);
+      }
+      console.log(err.response.data.data.err);
+    })
   }
 
   render() {

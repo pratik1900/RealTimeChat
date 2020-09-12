@@ -21,7 +21,7 @@ class App extends Component {
     .then(result => {
       console.log(result.data);
     })
-    .catch(console.log('GOTChA!!!'));
+    .catch(err => console.log(err));
   }
   render() {
     return (
