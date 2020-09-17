@@ -33,10 +33,14 @@ app.use(session({
   },
   store: store
 }));
+
 app.use((req, res, next) => {
-  console.log("MIDDLEWARE:", req.session);
-  next();
-});
+  if(req.session){
+    console.log("YES");
+  }
+  next()
+})
+
 app.use(routes);
 
 
@@ -55,10 +59,12 @@ mongoose
     console.log("Connected to DB.");
     const server = app.listen(5000, () => console.log("Server started!"));
     io.init(server);
-
     io.getIO().on("connect", socket => {
-      // console.log(socket.client.id)
-      socket.emit("login", "You are connected!");
+    // console.log(socket.client.id)
+    console.log(socket.id);
+    // req.session.user.socket_id = socket.id;
+    // req.session.save();
+    socket.emit("login", "You are connected!");
     });
   })
   .catch(err => console.log(err));

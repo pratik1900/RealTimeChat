@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import classes from "./Login.module.css";
 import axios from "../../axiosInstance";
+import io from 'socket.io-client';
 
 class Login extends Component {
   state = {
@@ -56,19 +57,32 @@ class Login extends Component {
       else {
         //validation pass
         console.log('validation pass!');
+        //wrong credentials (username)
         if(result.status === 401 && result.error) {
           this.setState({
             [result.error.field] : result.error.msg
           })
         }
-        
+        if(result.status === 200) {
+          this.props.loggedInHandler()
+          const socket = io("http://localhost:5000/");
+
+          socket.on("login", data => {
+            console.log(data);
+            console.log(socket.id);
+          });
+        }
       }
     })
     .catch(err => {
-      for(let i in err){
-        console.log(i);
-      }
-      console.log(err.response.data.data.err);
+      //wrong credentials (password)
+      // if (err.response.status === 401 && err.response.data.error) {
+      //   this.setState({
+      //     [err.response.data.error.field]: {
+      //       errorMsg : err.response.data.error.msg,
+      //     }
+      //   });
+      // }
     })
   }
 

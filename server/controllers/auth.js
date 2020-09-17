@@ -41,7 +41,6 @@ module.exports.postLogin = (req, res) => {
     res.json(errors);
   } else {
     // validation pass
-    console.log(req.body);
     User.findOne({ username: req.body.username })
     .then(user => {
       //Not doing if(user) as existence of user with given username is already done during data validation(routes)
@@ -51,7 +50,7 @@ module.exports.postLogin = (req, res) => {
           req.session.user = user._id
           req.session.isLoggedIn = true
           req.session.save()
-          res.json({msg: 'Done'})
+          res.status(200).json({msg: 'Done'})
         } else {
           res.status(401).json({error: { field: 'password', msg: 'Wrong Password' } });
         }
@@ -66,3 +65,13 @@ module.exports.postLogin = (req, res) => {
   console.log(errors);
   console.log("In Login Controller");
 };
+
+module.exports.postLogout = (req, res) => {
+ req.session.destroy(err => {
+   if(err){
+     console.log(err);
+   }
+   console.log('Logged out. Session destroyed.');
+   res.status(200).json({msg: "Logged out."})
+ })
+}

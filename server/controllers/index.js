@@ -1,6 +1,5 @@
 module.exports.getTexts = (req, res) => {
   // console.log("inside getTexts.js");
-  console.log('REQ.SESSION:',req.session);
   res.json({msg: 'Connected!'})
 };
 
