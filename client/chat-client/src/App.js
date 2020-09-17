@@ -6,6 +6,7 @@ import Login from "./containers/Login/Login";
 import Register from "./containers/Register/Register";
 import Navbar from "./components/Navbar/Navbar";
 import Logout from "./containers/Logout/Logout";
+import axios from "./axiosInstance";
 
 
 class App extends Component {
@@ -13,9 +14,20 @@ class App extends Component {
     isLoggedIn: false
   }
 
-  // componentDidMount() {
-  //   console.log(document.cookie)
-  // }
+  componentDidMount() {
+    this.setAuthStatus()
+  }
+
+  setAuthStatus() {
+    //prevents the navbar resetting to "Logged out" mode after refreshing the page
+    axios.get("http://localhost:5000/getAuthStatus")
+    .then(result => {
+      this.setState({
+        isLoggedIn: result.data.authStatus
+      })
+    })
+    .catch(err => console.log(err))
+  }
 
   loggedInHandler = () => {
     this.setState({

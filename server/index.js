@@ -34,12 +34,12 @@ app.use(session({
   store: store
 }));
 
-app.use((req, res, next) => {
-  if(req.session){
-    console.log("YES");
-  }
-  next()
-})
+// app.use((req, res, next) => {
+//   if(req.session){
+//     console.log("YES");
+//   }
+//   next()
+// })
 
 app.use(routes);
 

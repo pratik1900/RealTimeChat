@@ -75,3 +75,7 @@ module.exports.postLogout = (req, res) => {
    res.status(200).json({msg: "Logged out."})
  })
 }
+
+module.exports.getAuthStatus = (req, res) => {
+  res.json({ authStatus: req.session.isLoggedIn });
+}

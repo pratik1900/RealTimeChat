@@ -95,4 +95,6 @@ router.post(
 router.post('/logout', authControllers.postLogout)
 // -*-
 
+router.get("/getAuthStatus", authControllers.getAuthStatus);
+
 module.exports = router;
