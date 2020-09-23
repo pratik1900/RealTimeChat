@@ -1,5 +1,4 @@
 const { validationResult } = require('express-validator');
-const { use } = require('../routes');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 
@@ -78,4 +77,30 @@ module.exports.postLogout = (req, res) => {
 
 module.exports.getAuthStatus = (req, res) => {
   res.json({ authStatus: req.session.isLoggedIn });
+}
+
+module.exports.changeProfileInfo = (req, res) => {
+
+  const errors = validationResult(req);
+
+  //validation fail
+  if(!errors.isEmpty()) {
+    res.json(errors);
+  } else {
+    //validation passed
+    const { _id, username, email } = req.body;
+    User.updateOne({ _id: _id }, { username: username, email: email })
+      .then(result => {
+        console.log(result);
+        if (result.ok) {
+          User.findOne({ _id: _id }, "username email").then(updatedUser => {
+            res.status(200).json({
+              successfulUpdate: true,
+              updatedUser: updatedUser,
+            });
+          });
+        }
+      })
+      .catch(err => console.log(err));
+  }
 }

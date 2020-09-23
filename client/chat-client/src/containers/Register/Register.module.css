@@ -4,7 +4,7 @@
   width: 35%;
   margin: auto;
   align-items: center;
-  margin-top: 7%;
+  margin-top: 15vh;
   padding-top: 1%;
   padding-bottom: 1%;
   border-radius: 20px;
@@ -69,6 +69,7 @@
 
 .RegisterForm button {
   margin-top: 15px;
+  margin-bottom: 10px;
   padding: 20px;
   font-family: monospace;
   font-size: 24px;
@@ -94,3 +95,10 @@
             inset -2px -2px 5px rgba(255,255,255,0.1);
 }
 
+/* for phones */
+
+@media (pointer:none), (pointer:coarse) {
+  .RegisterForm {
+    width: 80vw;
+  }
+}

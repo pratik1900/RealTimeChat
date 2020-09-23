@@ -12,6 +12,7 @@ const NavItems = props => {
       {props.isLoggedIn ? (
         <Fragment>
           <NavItem link="/friends">Friends</NavItem>
+          <NavItem link="/profile">Profile</NavItem>
           <NavItem link="/logout">Logout</NavItem>
         </Fragment>
       ) : (

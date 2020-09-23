@@ -4,7 +4,7 @@
   width: 35%;
   margin: auto;
   align-items: center;
-  margin-top: 7%;
+  margin-top: 15vh;
   padding-top: 1%;
   padding-bottom: 1%;
   border-radius: 20px;
@@ -61,6 +61,7 @@
 
 .LoginForm button {
   margin-top: 15px;
+  margin-bottom: 10px;
   padding: 20px;
   font-family: monospace;
   font-size: 24px;
@@ -95,4 +96,12 @@
 
 body {
   background-color: rgb(109, 99, 99);
+}
+
+/* for phones */
+
+@media (pointer:none), (pointer:coarse) {
+  .LoginForm {
+    width: 80vw;
+  }
 }

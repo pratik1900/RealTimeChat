@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import classes from "./Register.module.css";
 import axios from "../../axiosInstance";
+import { withRouter } from "react-router-dom";
 
 class Register extends Component {
   state = {
@@ -129,4 +130,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default withRouter(Register);

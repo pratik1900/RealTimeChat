@@ -1,3 +1,4 @@
 server/node_modules
 server/.env
 client/chat-client/node_modules
+todo.txt

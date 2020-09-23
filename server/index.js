@@ -3,6 +3,7 @@ const express = require("express");
 const io = require("./socket");
 const mongoose = require("mongoose");
 const cors = require('cors');
+const multer = require("./MulterConfig").multer;
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -10,8 +11,10 @@ const routes = require("./routes/index");
 const User = require('./models/user');
 
 const app = express();
+
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //use before routes
+app.use(multer({ storage: multer.fileStorage, fileFilter: multer.fileFilter }).single('image'));
 
 
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.efyra.mongodb.net/<dbname>?retryWrites=true&w=majority`;
@@ -34,12 +37,6 @@ app.use(session({
   store: store
 }));
 
-// app.use((req, res, next) => {
-//   if(req.session){
-//     console.log("YES");
-//   }
-//   next()
-// })
 
 app.use(routes);
 

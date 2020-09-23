@@ -96,5 +96,25 @@ router.post('/logout', authControllers.postLogout)
 // -*-
 
 router.get("/getAuthStatus", authControllers.getAuthStatus);
+router.get("/getFriends", controllers.getFriends)
+router.get("/getUserInfo", controllers.getUserInfo);
+
+router.post(
+  "/changeProfileInfo",
+  [
+    body("username")
+      .isLength({ min: 5 })
+      .withMessage("Username needs to be at least 5 characters long.")
+      .isAlphanumeric()
+      .withMessage("Username can contain only alphabets and numbers.")
+      .trim(),
+
+    body("email")
+      .isEmail()
+      .withMessage("Please Enter a valid Email.") //specific error msg for e-mail validation fail
+      .normalizeEmail(),
+  ],
+  authControllers.changeProfileInfo
+);
 
 module.exports = router;

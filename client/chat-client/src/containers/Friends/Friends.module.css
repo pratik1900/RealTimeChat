@@ -1,0 +1,32 @@
+.FriendsList {
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  margin: 60px auto;
+  list-style: none;
+  vertical-align: middle;
+}
+
+.FriendsList li {
+  width: 25%;
+  padding: 20px;
+  background-color: rgb(75, 76, 77);
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.UserImage {
+  width: 50px;
+  height: auto;
+}
+
+.FriendUsername {
+  font-family: monospace;
+  text-transform: initial;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 20px;
+  color: cornsilk;
+  height: auto;
+}
