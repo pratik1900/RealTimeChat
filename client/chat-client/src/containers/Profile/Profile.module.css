@@ -18,11 +18,26 @@
   margin-right: 10%;
 }
 
-.ProfileImg img {
+.ProfileImgEdit {
+  cursor: pointer;
+}
+
+.ProfileImgEdit>input {
+  display: none;
+}
+
+.ProfileImg img,
+.ProfileImgEdit img
+ {
   margin: 0 auto;
   width: 150px;
   height: 150px;
+  cursor: pointer;
 }
+
+/* .ProfileImgEdit > img:hover {
+  
+} */
 
 .DefaultViewContent {
   display: flex;
@@ -99,3 +114,15 @@
   color: red;
 }
 
+.Overlay {
+  z-index:2;
+  position:absolute;
+  width:100%;
+  height:100%;
+  opacity:0;
+  background-color:rgba(0,0,0,.4);
+}
+
+.overlay:hover{
+ opacity:1;
+}

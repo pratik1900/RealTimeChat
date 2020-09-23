@@ -114,15 +114,19 @@ class Profile extends Component {
   renderEditView = () => {
     return (
       <div className={classes.EditArea}>
-        <div className={classes.ProfileImg}>
-          <img
-            src={this.state.userInfo.avatar}
-            onClick={this.toggleEditAreaHandler}
-          />
+        <div className={classes.ProfileImgEdit}>
+          {/* <div className={classes.Overlay}> */}
+          <label htmlFor="ImageSelector">
+            <img src={this.state.userInfo.avatar} />
+          </label>
+          {/* </div> */}
+          <input id="ImageSelector" type="file" />
         </div>
         <form className={classes.NewInfoForm}>
           <label htmlFor="username">Username</label>
-          <p className={classes.ErrorMsg}>{this.state.validationErrors.username.errorMsg}</p>
+          <p className={classes.ErrorMsg}>
+            {this.state.validationErrors.username.errorMsg}
+          </p>
           <input
             type="text"
             name="username"
@@ -131,7 +135,9 @@ class Profile extends Component {
             onChange={this.onChangeHandler}
           />
           <label htmlFor="email">E-mail</label>
-          <p className={classes.ErrorMsg}>{this.state.validationErrors.email.errorMsg}</p>
+          <p className={classes.ErrorMsg}>
+            {this.state.validationErrors.email.errorMsg}
+          </p>
           <input
             type="email"
             name="email"
@@ -166,7 +172,6 @@ class Profile extends Component {
           <div className={classes.ProfileImg}>
             <img
               src={this.state.userInfo.avatar}
-              onClick={this.toggleEditAreaHandler}
             />
           </div>
           <div className={classes.ProfileCreds}>
