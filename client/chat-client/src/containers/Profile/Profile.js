@@ -1,22 +1,25 @@
 import React, { Component } from "react";
 import classes from "./Profile.module.css";
+import Spinner from "../../components/Spinner/Spinner";
 
 import axios from "../../axiosInstance";
 
 class Profile extends Component {
   state = {
+    isLoading: true,
     inEditMode: false,
     userInfo: null,
     newUserInfo: {
       username: "",
       email: "",
     },
+    newProfileImage: null,
     validationErrors: {
       username: {
         errorMsg: "",
       },
       email: {
-        errorMsg: ""
+        errorMsg: "",
       },
     },
   };
@@ -36,9 +39,7 @@ class Profile extends Component {
               username: result.data.userInfo.username,
               email: result.data.userInfo.email,
             },
-          },
-          () => {
-            console.log(this.state);
+            isLoading: false
           }
         );
       })
@@ -53,6 +54,15 @@ class Profile extends Component {
           username: prevState.userInfo.username,
           email: prevState.userInfo.email,
         },
+        newProfileImage: null,
+        validationErrors: {
+          username: {
+            errorMsg: "",
+          },
+          email: {
+            errorMsg: "",
+          },
+        }
       };
     });
   };
@@ -67,16 +77,26 @@ class Profile extends Component {
   };
 
   updateProfileInfo = () => {
+    this.setState({ isLoading: true });
+
+    const payload = new FormData();
+    payload.append("_id", this.state.userInfo._id);
+    payload.append("username", this.state.newUserInfo.username);
+    payload.append("email", this.state.newUserInfo.email);
+
+    //checking if new profile img has been set, of so adding that data to payload
+    if(this.state.newProfileImage !== null) {
+      payload.append(
+        "newImg",
+        this.state.newProfileImage,
+        this.state.newProfileImage.name
+      );
+    }
+
     axios
-      .post("/changeProfileInfo", {
-        _id: this.state.userInfo._id,
-        username: this.state.newUserInfo.username,
-        email: this.state.newUserInfo.email,
-      })
+      .post("/changeProfileInfo", payload)
       .then(result => {
-        console.log(result);
         if (result.data.errors && result.data.errors.length > 0) {
-          console.log(result.data.errors);
           result.data.errors.forEach(errObj => {
             this.setState(prevState => {
               return {
@@ -86,6 +106,7 @@ class Profile extends Component {
                     errorMsg: errObj.msg,
                   },
                 },
+                isLoading: false
               };
             });
           });
@@ -98,11 +119,12 @@ class Profile extends Component {
                   ...prevState.userInfo,
                   username: result.data.updatedUser.username,
                   email: result.data.updatedUser.email,
+                  avatar: result.data.updatedUser.avatar,
                 },
                 inEditMode: false,
+                isLoading: false
               };
             });
-            setTimeout(() => console.log(this.state), 1000);
           } else {
             console.log("There was a Problem Updating the info.");
           }
@@ -111,16 +133,29 @@ class Profile extends Component {
       .catch(err => console.log(err));
   };
 
+  fileSelectedHandler = event => {
+    this.setState({
+      newProfileImage: event.target.files[0],
+    });
+  }
+
   renderEditView = () => {
+    if(this.state.isLoading) {
+      return <Spinner />
+    }
     return (
       <div className={classes.EditArea}>
         <div className={classes.ProfileImgEdit}>
-          {/* <div className={classes.Overlay}> */}
           <label htmlFor="ImageSelector">
-            <img src={this.state.userInfo.avatar} />
+            <div data-content="Change Image" className={classes.Overlay}>
+              <img src={this.state.userInfo.avatar} />
+            </div>
           </label>
-          {/* </div> */}
-          <input id="ImageSelector" type="file" />
+          <input
+            id="ImageSelector"
+            type="file"
+            onChange={this.fileSelectedHandler}
+          />
         </div>
         <form className={classes.NewInfoForm}>
           <label htmlFor="username">Username</label>
@@ -165,14 +200,15 @@ class Profile extends Component {
   };
 
   renderDefaultView = () => {
+    if (this.state.isLoading) {
+      return <Spinner />;
+    }
     return this.state.userInfo ? (
       <div className={classes.DefaultViewContent}>
         <h2>My Account</h2>
         <div className={classes.ProfileDetails}>
           <div className={classes.ProfileImg}>
-            <img
-              src={this.state.userInfo.avatar}
-            />
+            <img src={this.state.userInfo.avatar} />
           </div>
           <div className={classes.ProfileCreds}>
             <p>Username: {this.state.userInfo.username}</p>

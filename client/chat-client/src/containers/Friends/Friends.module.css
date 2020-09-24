@@ -9,11 +9,12 @@
 }
 
 .FriendsList li {
-  width: 25%;
+  width: 20%;
   padding: 20px;
   background-color: rgb(75, 76, 77);
   border-radius: 10px;
   margin-bottom: 15px;
+  display: flex; align-items: center;
 }
 
 .UserImage {

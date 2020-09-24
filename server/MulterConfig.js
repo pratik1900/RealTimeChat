@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 
 // const fileStorage = multer.memoryStorage();
 const fileStorage = multer.diskStorage({
@@ -6,7 +7,11 @@ const fileStorage = multer.diskStorage({
     cb(null, "./images");
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    const uniqueName = `${Date.now()}-${Math.round(
+      Math.random() * 1e9
+    )}${path.extname(file.originalname)}`;
+
+    cb(null, uniqueName);
   },
 });
 

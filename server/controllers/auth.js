@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const cloudinary = require("cloudinary").v2;
 
 
 module.exports.postRegister = (req, res) => {
@@ -80,27 +81,63 @@ module.exports.getAuthStatus = (req, res) => {
 }
 
 module.exports.changeProfileInfo = (req, res) => {
-
   const errors = validationResult(req);
-
   //validation fail
   if(!errors.isEmpty()) {
     res.json(errors);
   } else {
     //validation passed
     const { _id, username, email } = req.body;
-    User.updateOne({ _id: _id }, { username: username, email: email })
-      .then(result => {
-        console.log(result);
-        if (result.ok) {
-          User.findOne({ _id: _id }, "username email").then(updatedUser => {
-            res.status(200).json({
-              successfulUpdate: true,
-              updatedUser: updatedUser,
+    const newImg = req.file ? req.file : null;  //grab image file if it is sent
+
+    if(newImg===null) {
+      //Update - No new Profile Image
+      User.updateOne({ _id: _id }, { username: username, email: email })
+        .then(result => {
+          console.log(result);
+          if (result.ok) {
+            User.findOne({ _id: _id }, "username email avatar").then(updatedUser => {
+              res.status(200).json({
+                successfulUpdate: true,
+                updatedUser: updatedUser,
+              });
             });
-          });
-        }
-      })
-      .catch(err => console.log(err));
+          }
+        })
+        .catch(err => console.log(err));
+    } else {
+      // Update - NEW Profile Image
+      if (!newImg) {
+        //error with img file
+        res.status(422).json({
+          errorMsg: "Attached file is not an image!",
+        });
+      } else {
+        //hosting image
+        cloudinary.uploader.upload(newImg.path, { folder: "realtimechat" } , (err, result) => {
+          if (err) {
+            return console.log(err);
+          }
+          const imageUrl = result.secure_url;
+          const imageCloudId = result.public_id;
+
+          User.updateOne({ _id: _id }, { username: username, email: email, avatar: imageUrl })
+            .then(result => {
+              console.log(result);
+              if (result.ok) {
+                User.findOne({ _id: _id }, "username email avatar").then(
+                  updatedUser => {
+                    res.status(200).json({
+                      successfulUpdate: true,
+                      updatedUser: updatedUser,
+                    });
+                  }
+                );
+              }
+            })
+            .catch(err => console.log(err));
+        });
+      }
+    }
   }
 }

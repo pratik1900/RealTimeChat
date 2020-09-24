@@ -3,9 +3,11 @@ import React, { Component } from "react";
 import classes from "./Login.module.css";
 import axios from "../../axiosInstance";
 import io from 'socket.io-client';
+import Spinner from "../../components/Spinner/Spinner";
 
 class Login extends Component {
   state = {
+    isLoading: false,
     username: {
       value: "",
       errorMsg: null
@@ -26,6 +28,9 @@ class Login extends Component {
 
   submitHandler = event => {
     event.preventDefault();
+    this.setState({
+      isLoading: true
+    });
     const payload = {
       username: this.state.username.value,
       password: this.state.password.value
@@ -64,6 +69,9 @@ class Login extends Component {
           })
         }
         if(result.status === 200) {
+          this.setState({
+            isLoading: false
+          })
           this.props.loggedInHandler()
           const socket = io("http://localhost:5000/");
 
@@ -87,7 +95,7 @@ class Login extends Component {
   }
 
   render() {
-    return (
+    return this.state.isLoading ? <Spinner /> : (
       <form
         className={classes.LoginForm}
         action="http://localhost:5000/login"
