@@ -25,6 +25,12 @@ const userSchema = new Schema({
       ref: "User",
     },
   ],
+  pendingFriendRequests: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ]
 });
 
 module.exports = mongoose.model("User", userSchema);

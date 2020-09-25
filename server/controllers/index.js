@@ -37,3 +37,37 @@ module.exports.getFriends = (req, res) => {
   .catch(err => console.log(err))
 }
 
+module.exports.getUsers = (req, res) => {
+  console.log("IN GETUSER CONTROLLER:", req.body.searchQuery);
+
+  User.find({ username: { $regex: `${req.body.searchQuery}`, $options: "i" } })
+  .then(users => {
+    res.status(200).json({
+      foundUsers: users
+    });
+  })
+  .catch(err => {
+    console.log(err);
+    res.json({
+      errMsg: err,
+    });
+  });
+};
+
+module.exports.addFriend = (req, res) => {
+  const sender = req.session.user;
+  const recipient = req.body.recipientId;
+
+  User.findOne({ _id: recipient })
+  .then(recipient => {
+    recipient.pendingFriendRequests.push(sender);
+    recipient.save();
+  })
+  .catch(err => {
+    console.log(err);
+    res.json({
+      errorMsg: err
+    });
+  })
+}
+

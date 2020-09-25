@@ -96,8 +96,10 @@ router.post('/logout', authControllers.postLogout)
 // -*-
 
 router.get("/getAuthStatus", authControllers.getAuthStatus);
-router.get("/getFriends", controllers.getFriends)
+router.get("/getFriends", controllers.getFriends);
+router.post("/getUsers", controllers.getUsers);
 router.get("/getUserInfo", controllers.getUserInfo);
+router.post("/addFriend", controllers.addFriend);
 
 router.post(
   "/changeProfileInfo",

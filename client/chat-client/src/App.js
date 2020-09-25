@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import socketContext from "./socketContext";
+import socketContext from "./contexts/socketContext";
+import currentUserContext from "./contexts/currentUserContext";
 import Chatwindow from "./containers/Chatwindow/Chatwindow";
 import Login from "./containers/Login/Login";
 import Register from "./containers/Register/Register";
@@ -13,7 +14,8 @@ import Profile from "./containers/Profile/Profile";
 
 class App extends Component {
   state = {
-    isLoggedIn: false
+    isLoggedIn: false,
+    currentUser: null //to store current logged in user info
   }
 
   componentDidMount() {
@@ -25,7 +27,8 @@ class App extends Component {
     axios.get("http://localhost:5000/getAuthStatus")
     .then(result => {
       this.setState({
-        isLoggedIn: result.data.authStatus
+        isLoggedIn: result.data.authStatus,
+        currentUser: result.data.currentUser
       })
     })
     .catch(err => console.log(err))
@@ -40,39 +43,40 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <socketContext.Provider>
-          <Fragment>
-            <Navbar
-              isLoggedIn={this.state.isLoggedIn}
-              loggedInHandler={this.loggedInHandler}
-            />
-            
-            <Route path="/" exact>
-              <Chatwindow />
-            </Route>
+        <currentUserContext.Provider currentUser={this.state.currentUser}>
+          <socketContext.Provider>
+            <Fragment>
+              <Navbar
+                isLoggedIn={this.state.isLoggedIn}
+                loggedInHandler={this.loggedInHandler}
+              />
 
-            <Route path="/login">
-              <Login loggedInHandler={this.loggedInHandler} />
-            </Route>
+              <Route path="/" exact>
+                <Chatwindow />
+              </Route>
 
-            <Route path="/logout">
-              <Logout loggedInHandler={this.loggedInHandler} />
-            </Route>
+              <Route path="/login">
+                <Login loggedInHandler={this.loggedInHandler} />
+              </Route>
 
-            <Route path="/friends">
-              <Friends />
-            </Route>
+              <Route path="/logout">
+                <Logout loggedInHandler={this.loggedInHandler} />
+              </Route>
 
-            <Route path="/profile">
-              <Profile />
-            </Route>
+              <Route path="/friends">
+                <Friends />
+              </Route>
 
-            <Route path="/register">
-              <Register />
-            </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
 
-          </Fragment>
-        </socketContext.Provider>
+              <Route path="/register">
+                <Register />
+              </Route>
+            </Fragment>
+          </socketContext.Provider>
+        </currentUserContext.Provider>
       </Router>
     );
   }
