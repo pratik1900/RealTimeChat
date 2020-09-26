@@ -63,10 +63,6 @@ class App extends Component {
                 <Logout loggedInHandler={this.loggedInHandler} />
               </Route>
 
-              <Route path="/friends">
-                <Friends />
-              </Route>
-
               <Route path="/profile">
                 <Profile />
               </Route>

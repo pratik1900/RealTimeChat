@@ -37,7 +37,7 @@ class Navbar extends Component {
   render() {
     return (
       <div className={classes.Navbar}>
-        <span>
+        <span style={{ "cursor": "pointer" }}>
           <FaBars
             className={classes.HamburgerIcon}
             onClick={this.toggleSideBar}
