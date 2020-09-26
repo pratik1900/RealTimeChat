@@ -43,7 +43,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <currentUserContext.Provider currentUser={this.state.currentUser}>
+        <currentUserContext.Provider value={this.state.currentUser}>
           <socketContext.Provider>
             <Fragment>
               <Navbar

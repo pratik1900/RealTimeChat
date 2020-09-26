@@ -76,7 +76,6 @@ class Friends extends Component {
   }
 
   sendFriendRequestHandler = id => {
-    console.log(id);
     axios.post("/addFriend", {
       recipientId: id
     })
@@ -89,62 +88,61 @@ class Friends extends Component {
   }
 
   render() {
-    return
-    <currentUserContext.Consumer>
-    { currentUser => {
-      return this.state.friends.length <= 0 ? (
-        <Spinner />
-      ) : (
-        <div className={classes.Outer}>
-          <div className={classes.FriendsList}>
-            <ul>
-              {this.state.friends.map(friend => (
-                <li key={friend._id}>
-                  <img className={classes.UserImage} src={userImg} />
-                  <span className={classes.FriendUsername}>
-                    {friend.username}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={classes.FriendSearchArea}>
-            <input
-              className={classes.FriendSearchBar}
-              type="text"
-              value={this.state.friendSearchBarQuery}
-              onChange={this.searchBarChangeHandler}
-            />
-            <div className={classes.SearchResults}>
+    return (
+      <currentUserContext.Consumer>
+      { currentUser => this.state.friends.length <= 0 ? (
+          <Spinner />
+        ) : (
+          <div className={classes.Outer}>
+            <div className={classes.FriendsList}>
               <ul>
-                {this.state.foundUsers.map(foundUser => (
-                  <div className={classes.SearchResultItem} key={foundUser._id}>
-                    <li>
-                      <div className={classes.FoundUserData}>
-                        <img className={classes.UserImage} src={userImg} />
-                        <span className={classes.FoundUserUsername}>
-                          {foundUser.username}
-                        </span>
-                      </div>
-
-                      <button
-                        className={classes.AddFriendButton}
-                        onClick={() => this.sendFriendRequestHandler(foundUser._id)}
-                        disabled={currentUser}
-                      >
-                        Send Friend Request
-                      </button>
-                    </li>
-                    <hr className={classes.LineStyle} />
-                  </div>
+                {this.state.friends.map(friend => (
+                  <li key={friend._id}>
+                    <img className={classes.UserImage} src={userImg} />
+                    <span className={classes.FriendUsername}>
+                      {friend.username}
+                    </span>
+                  </li>
                 ))}
               </ul>
             </div>
+            <div className={classes.FriendSearchArea}>
+              <input
+                className={classes.FriendSearchBar}
+                type="text"
+                value={this.state.friendSearchBarQuery}
+                onChange={this.searchBarChangeHandler}
+              />
+              <div className={classes.SearchResults}>
+                <ul>
+                  {this.state.foundUsers.map(foundUser => (
+                    <div className={classes.SearchResultItem} key={foundUser._id}>
+                      <li>
+                        <div className={classes.FoundUserData}>
+                          <img className={classes.UserImage} src={userImg} />
+                          <span className={classes.FoundUserUsername}>
+                            {foundUser.username}
+                          </span>
+                        </div>
+
+                        <button
+                          className={classes.AddFriendButton}
+                          onClick={() => this.sendFriendRequestHandler(foundUser._id)}
+                          disabled={currentUser._id === foundUser._id}
+                        >
+                          Send Friend Request
+                        </button>
+                      </li>
+                      <hr className={classes.LineStyle} />
+                    </div>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      );
-    }}
-    </currentUserContext.Consumer>
+        )}
+      </currentUserContext.Consumer>
+    )
   }
 }
 

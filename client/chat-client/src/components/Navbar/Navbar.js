@@ -1,20 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import NavItems from './NavItems/NavItems';
 import Logo from './Logo/Logo';
-import classes from './Navbar.module.css'
+import { FaBars, FaClosedCaptioning } from "react-icons/fa";
+import classes from './Navbar.module.css';
+import Sidebar from "../SideBar/SideBar";
 
-const Navbar = props => {
-  return (
-    <div className={classes.Navbar}>
-      <span>
-        <Logo />
-      </span>
-      <nav>
-        <NavItems isLoggedIn={props.isLoggedIn} />
-      </nav>
-    </div>
-  );
+class Navbar extends Component {
+  state = {
+    showSidebar: false
+  }
+
+  // DELETE
+  componentDidMount() {
+    console.log(this.state  );
+  }
+
+  toggleSideBar = () => {
+    this.setState(
+      prevState => {
+        return {
+          showSidebar: !prevState.showSidebar,
+        };
+      }, () => console.log(this.state)
+    );
+  }
+
+  closeSideBar = () => {
+    this.setState(prevState => {
+      return {
+        showSidebar: false,
+      };
+    },() => console.log(this.state));
+  }
+
+  render() {
+    return (
+      <div className={classes.Navbar}>
+        <span>
+          <FaBars
+            className={classes.HamburgerIcon}
+            onClick={this.toggleSideBar}
+          />
+        </span>
+        <Sidebar 
+          toggleSideBar={this.toggleSideBar} 
+          closeSideBar={this.closeSideBar}
+          showSidebar={this.state.showSidebar} 
+        />
+        <nav>
+          <NavItems isLoggedIn={this.props.isLoggedIn} />
+        </nav>
+      </div>
+    );
+  }
 }
 
 export default Navbar;

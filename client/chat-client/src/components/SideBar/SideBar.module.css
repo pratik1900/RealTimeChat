@@ -1,0 +1,27 @@
+.SideBar {
+  height: 100vh;
+  /* background-color: #22262F; */
+  background-color: rgb(179, 50, 50);
+  opacity: 0.5;
+  color: white;
+  width: 30%;
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-out;
+}
+
+.Open {
+  transform: translateX(0);
+}
+
+.Close{
+  transform: translateX(-100%);
+}
+
+.HamburgerIcon {
+  margin-left: 20px;
+  margin-top: 1%;
+  font-size: xx-large;
+}

@@ -60,8 +60,14 @@ module.exports.addFriend = (req, res) => {
 
   User.findOne({ _id: recipient })
   .then(recipient => {
-    recipient.pendingFriendRequests.push(sender);
-    recipient.save();
+    //checking if request has not been sent before
+    if (!recipient.pendingFriendRequests.includes(sender)){
+      recipient.pendingFriendRequests.push(sender);
+      recipient.save();
+    }
+    res.status(200).json({
+      msg: "Friend Request Sent."
+    })
   })
   .catch(err => {
     console.log(err);
