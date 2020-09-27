@@ -1,0 +1,72 @@
+.FriendsList {
+  width: 100%;
+  left: 0;
+}
+.FriendsList ul {
+  padding-left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+
+.FriendsList li {
+  padding: 3%;
+  /* background-color: rgb(75, 76, 77); */
+  margin-bottom: 15px;
+  display: flex; align-items: center;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: 0.1s ease-in-out;
+}
+
+.FriendsList li:hover,
+.FriendsList li:focus {
+  background-color: rgb(179, 50, 50);
+  color: black;
+}
+.FriendsList li:hover > .FriendUsername { color: black; }
+
+.UserImage {
+  width: 50px;
+  height: auto;
+}
+
+.FriendUsername {
+  font-family: monospace;
+  text-transform: initial;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 20px;
+  color: rgb(179, 50, 50);
+  height: auto;
+}
+
+.PersonSearchBtn {
+  background-color: #22262F;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
+  font-size: 24px;
+  margin: 5% auto;
+  color: rgb(179, 50, 50);
+  transition: 0.1s ease-in-out;
+}
+
+hr.LineStyle {
+    border: 0;
+    height: 2px;
+    background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgba(179, 50, 50, 0.75),rgba(80, 77, 77, 0));
+}
+
+.PersonSearchBtn:hover {
+/* background-color:  rgb(214, 117, 117); */
+  background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgb(179, 50, 50),rgba(80, 77, 77, 0));
+  color: black;
+  /* transform: scale(1.05) */
+}

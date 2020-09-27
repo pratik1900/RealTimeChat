@@ -63,7 +63,6 @@ module.exports.postLogin = (req, res) => {
     .catch(err => console.log(err))
   }
   console.log(errors);
-  console.log("In Login Controller");
 };
 
 module.exports.postLogout = (req, res) => {

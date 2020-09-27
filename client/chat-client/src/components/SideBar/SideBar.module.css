@@ -27,12 +27,16 @@
   color: rgb(179, 50, 50);
 }
 
+.SidebarMainContent{
+  display: flex;
+  flex-direction: column;
+}
+
 .SidebarSectionSelection {
   display: flex;
   flex-direction: row;
   justify-items: center;
   align-items: center;
-  height: 5%;
   text-align: center;
 }
 

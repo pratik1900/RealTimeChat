@@ -8,8 +8,8 @@ import Register from "./containers/Register/Register";
 import Navbar from "./components/Navbar/Navbar";
 import Logout from "./containers/Logout/Logout";
 import axios from "./axiosInstance";
-import Friends from "./containers/Friends/Friends";
 import Profile from "./containers/Profile/Profile";
+import ManageFriends from "./containers/ManageFriends/ManageFriends";
 
 
 class App extends Component {
@@ -61,6 +61,10 @@ class App extends Component {
 
               <Route path="/logout">
                 <Logout loggedInHandler={this.loggedInHandler} />
+              </Route>
+
+              <Route path="/manageFriends">
+                <ManageFriends />
               </Route>
 
               <Route path="/profile">

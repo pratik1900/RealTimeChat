@@ -1,13 +1,13 @@
 .NavLink {
   display: inline !important;
   text-decoration: none;
-  color: white;
+  color: rgb(179, 50, 50);;
   font-family: monospace;
   font-size: x-large;
 }
 
 .active {
-  color: rgb(179, 50, 50);
+  color: black
 }
 
 .NavItem {

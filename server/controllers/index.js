@@ -38,20 +38,21 @@ module.exports.getFriends = (req, res) => {
 }
 
 module.exports.getUsers = (req, res) => {
-  console.log("IN GETUSER CONTROLLER:", req.body.searchQuery);
-
-  User.find({ username: { $regex: `${req.body.searchQuery}`, $options: "i" } })
-  .then(users => {
-    res.status(200).json({
-      foundUsers: users
-    });
+  User.find({
+    username: { $regex: `${req.body.searchQuery}`, $options: "i" },
+    _id: { $ne: { _id: req.session.user }},
   })
-  .catch(err => {
-    console.log(err);
-    res.json({
-      errMsg: err,
+    .then(users => {
+      res.status(200).json({
+        foundUsers: users,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        errMsg: err,
+      });
     });
-  });
 };
 
 module.exports.addFriend = (req, res) => {
@@ -64,10 +65,14 @@ module.exports.addFriend = (req, res) => {
     if (!recipient.pendingFriendRequests.includes(sender)){
       recipient.pendingFriendRequests.push(sender);
       recipient.save();
+      res.status(200).json({
+        msg: "Friend Request Sent.",
+      });
+    } else {
+      res.status(200).json({
+        msg: "Friend Request has been Sent already.",
+      });
     }
-    res.status(200).json({
-      msg: "Friend Request Sent."
-    })
   })
   .catch(err => {
     console.log(err);
@@ -75,5 +80,59 @@ module.exports.addFriend = (req, res) => {
       errorMsg: err
     });
   })
+};
+
+module.exports.acceptFriendRequest = (req, res) => {
+  const recipient = req.session.user; //already obj
+  const sender = mongoose.Types.ObjectId(req.body.senderId);  //converting string to obj
+
+  User.findOne({ _id: recipient })
+  .then(recipient => {
+    //checking if they are not already friends
+    if(!recipient.friends.includes(sender)) {
+      //adding sender to recipient's friendlist
+      recipient.friends.push(sender);
+      //removing the friend request from recipient's Pending Requests
+      let temp = recipient.pendingFriendRequests.filter(fr => fr !== sender);
+      recipient.pendingFriendRequests = temp;
+      return recipient.save();
+    }
+  })
+  .then(result => {
+    User.findOne({ _id: sender })
+    .then(sender => {
+      //checking if they are not already friends
+      if (!sender.friends.includes(recipient)) {
+        //adding recipient to sender's friendlist
+        sender.friends.push(recipient);
+        sender.save();
+        res.status(200).json({
+          msg: "Friend Request Accepted.",
+        });
+      }
+    })
+  })
+  .catch(err => {
+    console.log(err);
+    res.json({
+      errorMsg: err,
+    });
+  });
+};
+
+module.exports.getPendingRequests = (req, res) => {
+  User.findOne({ _id: req.session.user })
+    .populate("pendingFriendRequests")
+    .then(user => {
+      res.status(200).json({
+        pendingFriendRequests: user.pendingFriendRequests,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        errorMsg: err,
+      });
+    });
 }
 

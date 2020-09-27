@@ -4,6 +4,7 @@ import classes from "./Login.module.css";
 import axios from "../../axiosInstance";
 import io from 'socket.io-client';
 import Spinner from "../../components/Spinner/Spinner";
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
   state = {
@@ -72,6 +73,7 @@ class Login extends Component {
           this.setState({
             isLoading: false
           })
+          this.props.history.replace("/");
           this.props.loggedInHandler()
           const socket = io("http://localhost:5000/");
 
@@ -130,4 +132,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);

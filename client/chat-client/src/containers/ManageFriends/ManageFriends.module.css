@@ -1,0 +1,150 @@
+.Outer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.Outer>div {
+  margin-top: 5%;
+}
+
+.pendingRequests {
+  width: 30%;
+}
+
+.pendingRequests ul {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.pendingRequests li {
+  padding: 20px;
+  background-color: rgb(75, 76, 77);
+  margin-bottom: 15px;
+  display: flex; align-items: center;
+  cursor: pointer;
+}
+
+.UserImage {
+  width: 50px;
+  height: auto;
+}
+
+.SenderUsername, .FoundUserUsername {
+  font-family: monospace;
+  text-transform: initial;
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 20px;
+  color: rgb(179, 50, 50);
+  height: auto;
+}
+
+
+
+.UserSearchArea {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.SearchHeader {
+  font-family: monospace;
+  font-size: 30px;
+  font-weight: 400;
+  color: rgb(179, 50, 50);
+
+}
+
+.UserSearchBar {
+  margin: auto 0;
+  width: 80%;
+}
+
+.UserSearchBar  {
+  margin: 10px 0;
+  width: 60%;
+  padding: 20px;
+  border-radius: 50px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.7),
+              -2px -2px 5px rgba(255,255,255,0.1);
+  background: transparent;
+  color: cornsilk;
+}
+
+.FriendSearchBar :focus {
+  box-shadow: inset 3px 3px 5px rgba(0,0,0,0.7),
+              inset -2px -2px 5px rgba(255,255,255,0.1);
+}
+
+/* Placeholder Color Change */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: cornsilk;
+  font-family: monospace;
+  font-size: 22px;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: white;
+  font-family: monospace;
+  font-size: 22px;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+  font-family: monospace;
+  font-size: 22px;
+}
+/* Placeholder Color Change */
+
+.SearchResultItem {
+  list-style-type: none;
+}
+
+.SearchResultItem li {
+  display: flex; align-items: center;
+  padding: 3%;
+  transition: 0.2s ease-in;
+  display: flex;
+  justify-content: space-between;
+}
+
+.FoundUserData {
+  display: flex;
+  align-items: center;
+}
+
+.SearchResultItem li:hover {
+/* background-color:  rgb(214, 117, 117); */
+  background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgb(179, 50, 50),rgba(80, 77, 77, 0));
+  transform: scale(1.1)
+}
+
+.AddFriendButton {
+  cursor: pointer;
+  padding: 1%;
+  background-color: rgb(179, 50, 50);
+  border: none;
+  font-weight: 600;
+  outline: none;
+}
+
+/* Gradient color1 - color2 - color1 */
+
+hr.LineStyle {
+    border: 0;
+    height: 2px;
+    background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgba(0, 0, 0, 0.75),rgba(80, 77, 77, 0));
+}
+
+.pendingRequests h3 {
+  font-family: monospace;
+  color: rgb(179, 50, 50);
+  font-size: 20px;
+}

@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import NavItems from './NavItems/NavItems';
 import Logo from './Logo/Logo';
 import { FaBars, FaClosedCaptioning } from "react-icons/fa";
 import classes from './Navbar.module.css';
 import Sidebar from "../SideBar/SideBar";
+import currentUserContext from '../../contexts/currentUserContext';
 
 class Navbar extends Component {
   state = {
@@ -37,17 +38,22 @@ class Navbar extends Component {
   render() {
     return (
       <div className={classes.Navbar}>
-        <span style={{ "cursor": "pointer" }}>
-          <FaBars
-            className={classes.HamburgerIcon}
-            onClick={this.toggleSideBar}
-          />
-        </span>
-        <Sidebar 
-          toggleSideBar={this.toggleSideBar} 
-          closeSideBar={this.closeSideBar}
-          showSidebar={this.state.showSidebar} 
-        />
+        {this.props.isLoggedIn ? (
+          <Fragment>
+            <span style={{ cursor: "pointer" }}>
+              <FaBars
+                className={classes.HamburgerIcon}
+                onClick={this.toggleSideBar}
+              />
+            </span>
+            <Sidebar
+              toggleSideBar={this.toggleSideBar}
+              closeSideBar={this.closeSideBar}
+              showSidebar={this.state.showSidebar}
+            />
+          </Fragment>
+        ) : null}
+
         <nav>
           <NavItems isLoggedIn={this.props.isLoggedIn} />
         </nav>
