@@ -30,7 +30,13 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-  ]
+  ],
+  sentFriendRequests: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

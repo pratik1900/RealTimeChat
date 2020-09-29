@@ -24,19 +24,8 @@ class FriendsList extends Component {
       .get("/getFriends")
       .then(result => {
         console.log(result.data.friends);
-        const friends = result.data.friends;
+        const { friends } = result.data;
         console.log("Friends:",friends)
-        //Seeding
-        friends.push({
-          _id: "5f637338ca5cb62c0cc4cfa5",
-          username: "paro123",
-        });
-
-        friends.push({
-          _id: "5f637350ca5cb62c0cc4cfa6",
-          username: "joy123",
-        });
-
         this.setState({
           friends: friends,
         });

@@ -27,6 +27,7 @@ module.exports.getUserInfo = (req, res) => {
 
 module.exports.getFriends = (req, res) => {
   User.findOne({ _id: req.session.user })
+  .populate("friends")
   .then(user => {
     if(user) {
       res.status(200).json({
@@ -38,10 +39,13 @@ module.exports.getFriends = (req, res) => {
 }
 
 module.exports.getUsers = (req, res) => {
-  User.find({
-    username: { $regex: `${req.body.searchQuery}`, $options: "i" },
-    _id: { $ne: { _id: req.session.user }},
-  })
+  User.findOne({ _id: req.session.user })
+  .then(currentUser => {
+    //finding all users with username matching search query, except those already friends with currentUser
+    User.find({
+      username: { $regex: `${req.body.searchQuery}`, $options: "i" },
+      _id: { $ne: { _id: req.session.user }, $nin: currentUser.friends },
+    }, "avatar email friends pendingFriendRequests sentFriendRequests username")
     .then(users => {
       res.status(200).json({
         foundUsers: users,
@@ -53,6 +57,7 @@ module.exports.getUsers = (req, res) => {
         errMsg: err,
       });
     });
+  })
 };
 
 module.exports.addFriend = (req, res) => {
@@ -65,6 +70,13 @@ module.exports.addFriend = (req, res) => {
     if (!recipient.pendingFriendRequests.includes(sender)){
       recipient.pendingFriendRequests.push(sender);
       recipient.save();
+
+      User.findOne({ _id: sender })
+      .then(sender => {
+        sender.sentFriendRequests.push(recipient);
+        sender.save();
+      })
+
       res.status(200).json({
         msg: "Friend Request Sent.",
       });
@@ -93,7 +105,7 @@ module.exports.acceptFriendRequest = (req, res) => {
       //adding sender to recipient's friendlist
       recipient.friends.push(sender);
       //removing the friend request from recipient's Pending Requests
-      let temp = recipient.pendingFriendRequests.filter(fr => fr !== sender);
+      let temp = recipient.pendingFriendRequests.filter(fr => !fr.equals(sender));
       recipient.pendingFriendRequests = temp;
       return recipient.save();
     }
@@ -105,6 +117,9 @@ module.exports.acceptFriendRequest = (req, res) => {
       if (!sender.friends.includes(recipient)) {
         //adding recipient to sender's friendlist
         sender.friends.push(recipient);
+        //removing the friend request from sender's Sent Requests
+        let temp = sender.sentFriendRequests.filter(fr => !fr.equals(recipient));
+        sender.sentFriendRequests = temp;
         sender.save();
         res.status(200).json({
           msg: "Friend Request Accepted.",

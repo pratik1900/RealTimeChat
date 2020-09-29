@@ -36,9 +36,38 @@ class ManageFriends extends Component {
         searchQuery: this.state.userSearchBarQuery,
       })
       .then(results => {
+        console.log("CONTEXT:", this.context);
+        let foundUsers = results.data.foundUsers.map(foundUser => {
+          // console.log(foundUser.sentFriendRequests.includes(this.context._id));
+
+          let returnable = {};
+          
+          if (foundUser.pendingFriendRequests.includes(this.context._id)) {
+            console.log("ALREADY SENT!")
+            returnable =  {
+              ...foundUser,
+              requestSent: true
+            };
+          }
+          else if (foundUser.sentFriendRequests.includes(this.context._id)) {
+            console.log("ALREADY RECEIVED!");
+            returnable = {
+              ...foundUser,
+              requestReceived: true,
+            };
+          }
+          else {
+            returnable = {
+              ...foundUser,
+              requestSent: false,
+              requestReceived: false
+            };
+          }
+          return returnable;
+        })
         this.setState({
-          foundUsers: results.data.foundUsers,
-        });
+          foundUsers: foundUsers,
+        }, () => console.log(this.state));
       })
       .catch(err => console.log(err));
   }
@@ -81,11 +110,31 @@ class ManageFriends extends Component {
       })
       .then(result => {
         console.log(result);
+        this.setState({
+          state: this.state
+        })
+        // this.forceUpdate(); //not recommended but perhaps necessary. Might change later if better solution is
       })
       .catch(err => {
         console.log(err);
       });
   };
+
+  cancelFriendRequest = id => {
+    axios
+      .post("/cancelFriendRequest", {
+        recipientId: id,
+      })
+      .then(result => {
+        console.log(result);
+        // this.setState({
+        //   f
+        // })
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   acceptFriendRequestHandler = id => {
     axios
@@ -100,93 +149,89 @@ class ManageFriends extends Component {
       });
   };
 
-  checkIfFriendAlready = (currentUser, foundUser) => {
-    if(currentUser.friends.includes(foundUser._id)) {
-      console.log("Already Friends!!!");
-      return true;
-    }
-    return false;
-  }
-
   render() {
-    return (
-      <currentUserContext.Consumer>
-        {currentUser =>
-          this.state.pendingFriendRequests === null ? (
-            <Spinner />
-          ) : (
-            <div className={classes.Outer}>
-              <div className={classes.pendingRequests}>
-                <h3>Pending Friend Requests</h3>
-                <ul>
-                  {this.state.pendingFriendRequests.map(sender => (
-                    <li key={sender._id}>
-                      <img className={classes.UserImage} src={userImg} />
-                      <span className={classes.SenderUsername}>
-                        {sender.username}
-                      </span>
+    return this.state.pendingFriendRequests === null ? (
+      <Spinner />
+    ) : (
+      <div className={classes.Outer}>
+        <div className={classes.pendingRequests}>
+          <h3>Pending Friend Requests</h3>
+          <ul>
+            {this.state.pendingFriendRequests.map(sender => (
+              <li key={sender._id}>
+                <img className={classes.UserImage} src={sender.avatar} />
+                <span className={classes.SenderUsername}>
+                  {sender.username}
+                </span>
+                <button
+                  className={classes.AddFriendButton}
+                  onClick={() => this.acceptFriendRequestHandler(sender._id)}
+                >
+                  Accept
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={classes.UserSearchArea}>
+          <h2 className={classes.SearchHeader}>Search for a User</h2>
+          <input
+            className={classes.UserSearchBar}
+            type="text"
+            value={this.state.userSearchBarQuery}
+            onChange={this.searchBarChangeHandler}
+          />
+          <div className={classes.SearchResults}>
+            <ul>
+              {this.state.foundUsers.length > 0 &&
+                this.state.foundUsers.map(foundUser => (
+                  <div className={classes.SearchResultItem} key={foundUser._id}>
+                    <li>
+                      <div className={classes.FoundUserData}>
+                        <img
+                          className={classes.UserImage}
+                          src={foundUser.avatar}
+                        />
+                        <span className={classes.FoundUserUsername}>
+                          {foundUser.username}
+                        </span>
+                      </div>
+
+                      
                       <button
                         className={classes.AddFriendButton}
                         onClick={() =>
-                          this.acceptFriendRequestHandler(sender._id)
+                          this.sendFriendRequestHandler(foundUser._id)
+                        }
+                        disabled={
+                          this.context._id === foundUser._id ||
+                          foundUser.requestSent === true
                         }
                       >
-                        Accept
+                        {foundUser.requestSent
+                          ? "Already Sent"
+                          : "Send Friend Request"}
                       </button>
+                      {foundUser.requestSent ? (
+                        <button 
+                        className={classes.AddFriendButton}
+                        onClick={ () => this.cancelFriendRequest(foundUser._id) }
+                        >
+                          Cancel Request
+                        </button>
+                      ) : null}
                     </li>
-                  ))}
-                </ul>
-              </div>
-              <div className={classes.UserSearchArea}>
-                <h2 className={classes.SearchHeader}>Search for a User</h2>
-                <input
-                  className={classes.UserSearchBar}
-                  type="text"
-                  value={this.state.userSearchBarQuery}
-                  onChange={this.searchBarChangeHandler}
-                />
-                <div className={classes.SearchResults}>
-                  <ul>
-                    {this.state.foundUsers.map(foundUser => (
-                      <div
-                        className={classes.SearchResultItem}
-                        key={foundUser._id}
-                      >
-                        <li>
-                          <div className={classes.FoundUserData}>
-                            <img className={classes.UserImage} src={userImg} />
-                            <span className={classes.FoundUserUsername}>
-                              {foundUser.username}
-                            </span>
-                          </div>
-
-                          <button
-                            className={classes.AddFriendButton}
-                            onClick={() =>
-                              this.sendFriendRequestHandler(foundUser._id)
-                            }
-                            disabled={
-                              currentUser._id === foundUser._id ||
-                              this.checkIfFriendAlready(currentUser, foundUser)
-                            }
-                          >
-                            { this.checkIfFriendAlready(currentUser, foundUser)
-                              ? "Already Added" : "Send Friend Request"
-                            }
-                          </button>
-                        </li>
-                        <hr className={classes.LineStyle} />
-                      </div>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )
-        }
-      </currentUserContext.Consumer>
+                    <hr className={classes.LineStyle} />
+                  </div>
+                ))}
+            </ul>
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
-export default ManageFriends;
+  ManageFriends.contextType = currentUserContext;
+
+  export default ManageFriends;
