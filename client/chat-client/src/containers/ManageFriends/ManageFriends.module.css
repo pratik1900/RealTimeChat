@@ -126,7 +126,7 @@
   transform: scale(1.1)
 }
 
-.AddFriendButton {
+.FriendPageButton {
   cursor: pointer;
   padding: 1%;
   background-color: rgb(179, 50, 50);

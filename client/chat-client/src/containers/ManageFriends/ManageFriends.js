@@ -38,36 +38,38 @@ class ManageFriends extends Component {
       .then(results => {
         console.log("CONTEXT:", this.context);
         let foundUsers = results.data.foundUsers.map(foundUser => {
-          // console.log(foundUser.sentFriendRequests.includes(this.context._id));
+          
+          console.log(foundUser.pendingFriendRequests.includes(this.context._id));
 
           let returnable = {};
-          
+
           if (foundUser.pendingFriendRequests.includes(this.context._id)) {
-            console.log("ALREADY SENT!")
-            returnable =  {
+            console.log("ALREADY SENT!");
+            returnable = {
               ...foundUser,
-              requestSent: true
+              requestSent: true,
             };
-          }
-          else if (foundUser.sentFriendRequests.includes(this.context._id)) {
+          } else if (foundUser.sentFriendRequests.includes(this.context._id)) {
             console.log("ALREADY RECEIVED!");
             returnable = {
               ...foundUser,
               requestReceived: true,
             };
-          }
-          else {
+          } else {
             returnable = {
               ...foundUser,
               requestSent: false,
-              requestReceived: false
+              requestReceived: false,
             };
           }
           return returnable;
-        })
-        this.setState({
-          foundUsers: foundUsers,
-        }, () => console.log(this.state));
+        });
+        this.setState(
+          {
+            foundUsers: foundUsers,
+          },
+          () => console.log(this.state)
+        );
       })
       .catch(err => console.log(err));
   }
@@ -111,8 +113,8 @@ class ManageFriends extends Component {
       .then(result => {
         console.log(result);
         this.setState({
-          state: this.state
-        })
+          state: this.state,
+        });
         // this.forceUpdate(); //not recommended but perhaps necessary. Might change later if better solution is
       })
       .catch(err => {
@@ -120,29 +122,33 @@ class ManageFriends extends Component {
       });
   };
 
-  cancelFriendRequest = id => {
-    axios
-      .post("/cancelFriendRequest", {
-        recipientId: id,
-      })
-      .then(result => {
-        console.log(result);
-        // this.setState({
-        //   f
-        // })
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
   acceptFriendRequestHandler = id => {
     axios
-      .post("/acceptFriendRequest", {
-        senderId: id,
+    .post("/acceptFriendRequest", {
+      senderId: id,
+    })
+    .then(result => {
+      console.log(result);
+      this.setState({
+        state: this.state,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  };
+
+  cancelFriendRequestHandler = (recipientId, senderId) => {
+    axios
+      .post("/cancelFriendRequest", {
+        recipientId: recipientId,
+        senderId: senderId,
       })
       .then(result => {
         console.log(result);
+        this.setState({
+          state: this.state,
+        });
       })
       .catch(err => {
         console.log(err);
@@ -164,10 +170,16 @@ class ManageFriends extends Component {
                   {sender.username}
                 </span>
                 <button
-                  className={classes.AddFriendButton}
+                  className={classes.FriendPageButton}
                   onClick={() => this.acceptFriendRequestHandler(sender._id)}
                 >
                   Accept
+                </button>
+                <button
+                  className={classes.FriendPageButton}
+                  onClick={() => this.cancelFriendRequestHandler(this.context._id, sender._id)}
+                >
+                  Reject
                 </button>
               </li>
             ))}
@@ -196,29 +208,51 @@ class ManageFriends extends Component {
                           {foundUser.username}
                         </span>
                       </div>
-
-                      
-                      <button
-                        className={classes.AddFriendButton}
-                        onClick={() =>
-                          this.sendFriendRequestHandler(foundUser._id)
-                        }
-                        disabled={
-                          this.context._id === foundUser._id ||
-                          foundUser.requestSent === true
-                        }
-                      >
-                        {foundUser.requestSent
-                          ? "Already Sent"
-                          : "Send Friend Request"}
-                      </button>
+                      {foundUser.requestReceived ? (
+                        <Fragment>
+                          <button
+                            className={classes.FriendPageButton}
+                            onClick={() =>
+                              this.acceptFriendRequestHandler(foundUser._id)
+                            }
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className={classes.FriendPageButton}
+                            onClick={() =>
+                              this.cancelFriendRequestHandler(this.context._id, foundUser._id)
+                            }
+                          >
+                            Reject
+                          </button>
+                        </Fragment>
+                      ) : null}
                       {foundUser.requestSent ? (
-                        <button 
-                        className={classes.AddFriendButton}
-                        onClick={ () => this.cancelFriendRequest(foundUser._id) }
+                        <button
+                          className={classes.FriendPageButton}
+                          onClick={() =>
+                            this.cancelFriendRequestHandler(foundUser._id, this.context._id)
+                          }
                         >
-                          Cancel Request
+                          Cancel
                         </button>
+                      ) : null}
+                      {!foundUser.requestSent && !foundUser.requestReceived ? (
+                        foundUser.friends.includes(this.context._id) ? (
+                          <button disabled className={classes.FriendPageButton}>
+                            Already Friends
+                          </button>
+                        ) : (
+                          <button
+                            className={classes.FriendPageButton}
+                            onClick={() =>
+                              this.sendFriendRequestHandler(foundUser._id)
+                            }
+                          >
+                            Add Friend
+                          </button>
+                        )
                       ) : null}
                     </li>
                     <hr className={classes.LineStyle} />

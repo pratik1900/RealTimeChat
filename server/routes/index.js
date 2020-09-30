@@ -101,6 +101,7 @@ router.post("/getUsers", controllers.getUsers);
 router.get("/getUserInfo", controllers.getUserInfo);
 router.post("/addFriend", controllers.addFriend);
 router.post("/acceptFriendRequest", controllers.acceptFriendRequest);
+router.post("/cancelFriendRequest", controllers.cancelFriendRequest);
 router.get("/getPendingRequests", controllers.getPendingRequests);
 
 router.post(

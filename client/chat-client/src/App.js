@@ -29,7 +29,7 @@ class App extends Component {
       this.setState({
         isLoggedIn: result.data.authStatus,
         currentUser: result.data.currentUser
-      })
+      }, () => console.log("START UP:", this.state))
     })
     .catch(err => console.log(err))
   }
