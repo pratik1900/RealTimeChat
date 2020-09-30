@@ -133,6 +133,28 @@
   border: none;
   font-weight: 600;
   outline: none;
+  transition: 0.1s ease-in-out;
+}
+
+.FriendPageButton2 {
+  cursor: pointer;
+  padding: 4%;
+  background-color: rgb(179, 50, 50);
+  border: none;
+  font-weight: 600;
+  outline: none;
+  border-radius: 10%;
+  transition: 0.1s ease-in-out;
+}
+
+.FriendPageButton:hover {
+  transform: scale(1.1);
+  border: 2px solid black;
+}
+
+.FriendPageButton2:hover {
+  transform: scale(1.1);
+
 }
 
 /* Gradient color1 - color2 - color1 */

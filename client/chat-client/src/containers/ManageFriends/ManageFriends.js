@@ -112,9 +112,7 @@ class ManageFriends extends Component {
       })
       .then(result => {
         console.log(result);
-        this.setState({
-          state: this.state,
-        });
+        this.setState({});
         // this.forceUpdate(); //not recommended but perhaps necessary. Might change later if better solution is
       })
       .catch(err => {
@@ -169,24 +167,38 @@ class ManageFriends extends Component {
                 <span className={classes.SenderUsername}>
                   {sender.username}
                 </span>
-                <button
-                  className={classes.FriendPageButton}
-                  onClick={() => this.acceptFriendRequestHandler(sender._id)}
+                <div
+                  style={{
+                    width: "50%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
                 >
-                  Accept
-                </button>
-                <button
-                  className={classes.FriendPageButton}
-                  onClick={() => this.cancelFriendRequestHandler(this.context._id, sender._id)}
-                >
-                  Reject
-                </button>
+                  <button
+                    className={classes.FriendPageButton2}
+                    onClick={() => this.acceptFriendRequestHandler(sender._id)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className={classes.FriendPageButton2}
+                    onClick={() =>
+                      this.cancelFriendRequestHandler(
+                        this.context._id,
+                        sender._id
+                      )
+                    }
+                  >
+                    Reject
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         </div>
         <div className={classes.UserSearchArea}>
-          <h2 className={classes.SearchHeader}>Search for a User</h2>
+          <h2 className={classes.SearchHeader}>Looking for someone?</h2>
           <input
             className={classes.UserSearchBar}
             type="text"
@@ -208,52 +220,64 @@ class ManageFriends extends Component {
                           {foundUser.username}
                         </span>
                       </div>
-                      {foundUser.requestReceived ? (
-                        <Fragment>
+                      <div style={{width: "30%", display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
+                        {foundUser.requestReceived ? (
+                          <Fragment>
+                            <button
+                              className={classes.FriendPageButton}
+                              onClick={() =>
+                                this.acceptFriendRequestHandler(foundUser._id)
+                              }
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className={classes.FriendPageButton}
+                              onClick={() =>
+                                this.cancelFriendRequestHandler(
+                                  this.context._id,
+                                  foundUser._id
+                                )
+                              }
+                            >
+                              Reject
+                            </button>
+                          </Fragment>
+                        ) : null}
+                        {foundUser.requestSent ? (
                           <button
                             className={classes.FriendPageButton}
                             onClick={() =>
-                              this.acceptFriendRequestHandler(foundUser._id)
+                              this.cancelFriendRequestHandler(
+                                foundUser._id,
+                                this.context._id
+                              )
                             }
                           >
-                            Accept
+                            Cancel
                           </button>
-                          <button
-                            className={classes.FriendPageButton}
-                            onClick={() =>
-                              this.cancelFriendRequestHandler(this.context._id, foundUser._id)
-                            }
-                          >
-                            Reject
-                          </button>
-                        </Fragment>
-                      ) : null}
-                      {foundUser.requestSent ? (
-                        <button
-                          className={classes.FriendPageButton}
-                          onClick={() =>
-                            this.cancelFriendRequestHandler(foundUser._id, this.context._id)
-                          }
-                        >
-                          Cancel
-                        </button>
-                      ) : null}
-                      {!foundUser.requestSent && !foundUser.requestReceived ? (
-                        foundUser.friends.includes(this.context._id) ? (
-                          <button disabled className={classes.FriendPageButton}>
-                            Already Friends
-                          </button>
-                        ) : (
-                          <button
-                            className={classes.FriendPageButton}
-                            onClick={() =>
-                              this.sendFriendRequestHandler(foundUser._id)
-                            }
-                          >
-                            Add Friend
-                          </button>
-                        )
-                      ) : null}
+                        ) : null}
+                        {!foundUser.requestSent &&
+                        !foundUser.requestReceived ? (
+                          foundUser.friends.includes(this.context._id) ? (
+                            <button
+                              disabled
+                              className={classes.FriendPageButton}
+                            >
+                              Already Friends
+                            </button>
+                          ) : (
+                            <button
+                              className={classes.FriendPageButton}
+                              onClick={() =>
+                                this.sendFriendRequestHandler(foundUser._id)
+                              }
+                            >
+                              Add Friend
+                            </button>
+                          )
+                        ) : null}
+                      </div>
                     </li>
                     <hr className={classes.LineStyle} />
                   </div>
