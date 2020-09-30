@@ -64,8 +64,8 @@ module.exports.addFriend = (req, res) => {
   const sender = mongoose.Types.ObjectId(req.session.user);
   const recipient = mongoose.Types.ObjectId(req.body.recipientId);
 
-  console.log(sender);
-  console.log(recipient);
+  console.log("ADD FRIEND SENDER:",sender);
+  console.log("ADD FRIEND RECIPIENT:", recipient);
 
   User.findOne({ _id: recipient })
   .then(recipientDoc => {
@@ -74,8 +74,10 @@ module.exports.addFriend = (req, res) => {
       //checking if request has not been sent before, or that they are not already friends
       if (
         !recipientDoc.pendingFriendRequests.includes(sender) &&
+        !recipientDoc.sentFriendRequests.includes(sender) &&
         !recipientDoc.friends.includes(sender) &&
         !senderDoc.sentFriendRequests.includes(recipient) &&
+        !senderDoc.pendingFriendRequests.includes(recipient) &&
         !senderDoc.friends.includes(recipient)
       ) {
         recipientDoc.pendingFriendRequests.push(sender);

@@ -21,15 +21,18 @@ class App extends Component {
   componentDidMount() {
     this.setAuthStatus()
   }
+  // componentDidUpdate() {
+  //   this.setAuthStatus()
+  // }
 
-  setAuthStatus() {
+  setAuthStatus = () => {
     //prevents the navbar resetting to "Logged out" mode after refreshing the page
     axios.get("http://localhost:5000/getAuthStatus")
     .then(result => {
       this.setState({
         isLoggedIn: result.data.authStatus,
         currentUser: result.data.currentUser
-      }, () => console.log("START UP:", this.state))
+      }, () => console.log("START UP:", this.state.currentUser))
     })
     .catch(err => console.log(err))
   }
@@ -56,7 +59,7 @@ class App extends Component {
               </Route>
 
               <Route path="/login">
-                <Login loggedInHandler={this.loggedInHandler} />
+                <Login loggedInHandler={this.loggedInHandler} setAuthStatus={this.setAuthStatus} />
               </Route>
 
               <Route path="/logout">

@@ -74,7 +74,8 @@ class Login extends Component {
             isLoading: false
           })
           this.props.history.replace("/");
-          this.props.loggedInHandler()
+          this.props.loggedInHandler();
+          this.props.setAuthStatus()
           const socket = io("http://localhost:5000/");
 
           socket.on("login", data => {

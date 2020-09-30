@@ -47,7 +47,7 @@ class FriendsList extends Component {
         <ul>
           {this.state.friends.map(friend => (
             <li key={friend._id}>
-              <img className={classes.UserImage} src={userImg} />
+              <img className={classes.UserImage} src={friend.avatar} />
               <span className={classes.FriendUsername}>{friend.username}</span>
             </li>
           ))}

@@ -26,48 +26,45 @@ class ManageFriends extends Component {
       prevState.userSearchBarQuery !== this.state.userSearchBarQuery &&
       this.state.userSearchBarQuery !== ""
     ) {
-      this.getUsers();
+      // this.getUsers();
+      console.log(this.state);
     }
   }
 
-  getUsers() {
+  getUsers = () => {
     axios
       .post("/getUsers", {
         searchQuery: this.state.userSearchBarQuery,
       })
       .then(results => {
         console.log("CONTEXT:", this.context);
-        let foundUsers = results.data.foundUsers.map(foundUser => {
-          
-          console.log(foundUser.pendingFriendRequests.includes(this.context._id));
+        let { foundUsers } = results.data;
+        let updatedFoundUsers = foundUsers.map(foundUser => {
 
-          let returnable = {};
+          console.log("1:",foundUser.pendingFriendRequests.includes(this.context._id));
+          console.log("2:",foundUser.sentFriendRequests.includes(this.context._id));
 
           if (foundUser.pendingFriendRequests.includes(this.context._id)) {
             console.log("ALREADY SENT!");
-            returnable = {
+            return {
               ...foundUser,
               requestSent: true,
             };
           } else if (foundUser.sentFriendRequests.includes(this.context._id)) {
             console.log("ALREADY RECEIVED!");
-            returnable = {
+            return {
               ...foundUser,
               requestReceived: true,
             };
           } else {
-            returnable = {
+            return {
               ...foundUser,
               requestSent: false,
               requestReceived: false,
             };
           }
-          return returnable;
         });
-        this.setState(
-          {
-            foundUsers: foundUsers,
-          },
+        this.setState({ foundUsers: updatedFoundUsers },
           () => console.log(this.state)
         );
       })
@@ -79,11 +76,7 @@ class ManageFriends extends Component {
       .get("/getPendingRequests")
       .then(result => {
         console.log(result.data.pendingFriendRequests);
-
-        this.setState(
-          {
-            pendingFriendRequests: result.data.pendingFriendRequests,
-          },
+        this.setState({ pendingFriendRequests: result.data.pendingFriendRequests },
           () => console.log(this.state)
         );
       })
@@ -106,14 +99,15 @@ class ManageFriends extends Component {
   };
 
   sendFriendRequestHandler = id => {
+    console.log("RECIPIENT:", typeof id);
     axios
       .post("/addFriend", {
         recipientId: id,
       })
       .then(result => {
         console.log(result);
-        this.setState({});
-        // this.forceUpdate(); //not recommended but perhaps necessary. Might change later if better solution is
+        this.getPendingRequests();
+        this.getUsers(); //updating buttons,etc
       })
       .catch(err => {
         console.log(err);
@@ -127,9 +121,8 @@ class ManageFriends extends Component {
     })
     .then(result => {
       console.log(result);
-      this.setState({
-        state: this.state,
-      });
+      this.getPendingRequests();
+      this.getUsers();
     })
     .catch(err => {
       console.log(err);
@@ -144,9 +137,8 @@ class ManageFriends extends Component {
       })
       .then(result => {
         console.log(result);
-        this.setState({
-          state: this.state,
-        });
+        this.getPendingRequests();
+        this.getUsers();
       })
       .catch(err => {
         console.log(err);
@@ -205,6 +197,12 @@ class ManageFriends extends Component {
             value={this.state.userSearchBarQuery}
             onChange={this.searchBarChangeHandler}
           />
+          <button
+            className={classes.FriendPageButton}
+            onClick={this.getUsers}
+          >
+            SEARCH
+          </button>
           <div className={classes.SearchResults}>
             <ul>
               {this.state.foundUsers.length > 0 &&
@@ -220,7 +218,14 @@ class ManageFriends extends Component {
                           {foundUser.username}
                         </span>
                       </div>
-                      <div style={{width: "30%", display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
+                      <div
+                        style={{
+                          width: "30%",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-around",
+                        }}
+                      >
                         {foundUser.requestReceived ? (
                           <Fragment>
                             <button
@@ -290,6 +295,6 @@ class ManageFriends extends Component {
   }
 }
 
-  ManageFriends.contextType = currentUserContext;
+ManageFriends.contextType = currentUserContext;
 
-  export default ManageFriends;
+export default ManageFriends;
