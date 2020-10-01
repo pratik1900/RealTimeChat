@@ -55,6 +55,8 @@
   font-size: 30px;
   font-weight: 400;
   color: rgb(179, 50, 50);
+  margin-left: auto;
+  margin-right: auto;
 
 }
 
@@ -124,6 +126,29 @@
 /* background-color:  rgb(214, 117, 117); */
   background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgb(179, 50, 50),rgba(80, 77, 77, 0));
   transform: scale(1.1)
+}
+
+.SearchBarAndBtnUnit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.BigSearchBtn {
+  width: 20%;
+  cursor: pointer;
+  background-color: rgb(179, 50, 50);
+  border: none;
+  font-weight: 600;
+  outline: none;
+  height: 70%;
+  border-radius: 50px;
+  transition: 0.1s ease-in-out;
+}
+
+.BigSearchBtn:hover {
+  transform: scale(1.1);
 }
 
 .FriendPageButton {

@@ -191,18 +191,20 @@ class ManageFriends extends Component {
         </div>
         <div className={classes.UserSearchArea}>
           <h2 className={classes.SearchHeader}>Looking for someone?</h2>
-          <input
-            className={classes.UserSearchBar}
-            type="text"
-            value={this.state.userSearchBarQuery}
-            onChange={this.searchBarChangeHandler}
-          />
-          <button
-            className={classes.FriendPageButton}
-            onClick={this.getUsers}
-          >
-            SEARCH
-          </button>
+          <div className={classes.SearchBarAndBtnUnit}>
+            <input
+              className={classes.UserSearchBar}
+              type="text"
+              value={this.state.userSearchBarQuery}
+              onChange={this.searchBarChangeHandler}
+            />
+            <button
+              className={classes.BigSearchBtn}
+              onClick={this.getUsers}
+            >
+              SEARCH
+            </button>
+          </div>
           <div className={classes.SearchResults}>
             <ul>
               {this.state.foundUsers.length > 0 &&
