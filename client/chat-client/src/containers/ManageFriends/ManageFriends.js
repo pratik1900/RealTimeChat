@@ -13,12 +13,13 @@ const userImg =
 class ManageFriends extends Component {
   state = {
     pendingFriendRequests: null,
+    sentFriendRequests: null,
     userSearchBarQuery: "",
     foundUsers: [],
   };
 
   componentDidMount() {
-    this.getPendingRequests();
+    this.getOngoingRequests();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -71,12 +72,15 @@ class ManageFriends extends Component {
       .catch(err => console.log(err));
   }
 
-  getPendingRequests() {
+  getOngoingRequests() {
     axios
-      .get("/getPendingRequests")
+      .get("/getOngoingRequests")
       .then(result => {
         console.log(result.data.pendingFriendRequests);
-        this.setState({ pendingFriendRequests: result.data.pendingFriendRequests },
+        this.setState({ 
+          pendingFriendRequests: result.data.pendingFriendRequests,
+          sentFriendRequests: result.data.sentFriendRequests
+        },
           () => console.log(this.state)
         );
       })
@@ -106,7 +110,7 @@ class ManageFriends extends Component {
       })
       .then(result => {
         console.log(result);
-        this.getPendingRequests();
+        this.getOngoingRequests();
         this.getUsers(); //updating buttons,etc
       })
       .catch(err => {
@@ -121,7 +125,7 @@ class ManageFriends extends Component {
     })
     .then(result => {
       console.log(result);
-      this.getPendingRequests();
+      this.getOngoingRequests();
       this.getUsers();
     })
     .catch(err => {
@@ -137,7 +141,7 @@ class ManageFriends extends Component {
       })
       .then(result => {
         console.log(result);
-        this.getPendingRequests();
+        this.getOngoingRequests();
         this.getUsers();
       })
       .catch(err => {
@@ -150,44 +154,67 @@ class ManageFriends extends Component {
       <Spinner />
     ) : (
       <div className={classes.Outer}>
-        <div className={classes.pendingRequests}>
-          <h3>Pending Friend Requests</h3>
-          <ul>
-            {this.state.pendingFriendRequests.map(sender => (
-              <li key={sender._id}>
-                <img className={classes.UserImage} src={sender.avatar} />
-                <span className={classes.SenderUsername}>
-                  {sender.username}
-                </span>
-                <div
-                  style={{
-                    width: "50%",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  <button
-                    className={classes.FriendPageButton2}
-                    onClick={() => this.acceptFriendRequestHandler(sender._id)}
+        <div className={classes.LeftSection}>
+          <div className={classes.ongoingRequests}>
+            <h3>Pending Friend Requests</h3>
+            <ul>
+              {this.state.pendingFriendRequests.map(sender => (
+                <li key={sender._id}>
+                  <img className={classes.UserImage} src={sender.avatar} />
+                  <span className={classes.SenderUsername}>
+                    {sender.username}
+                  </span>
+                  <div
+                    style={{
+                      width: "50%",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
                   >
-                    Accept
-                  </button>
+                    <button
+                      className={classes.FriendPageButton2}
+                      onClick={() =>
+                        this.acceptFriendRequestHandler(sender._id)
+                      }
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className={classes.FriendPageButton2}
+                      onClick={() =>
+                        this.cancelFriendRequestHandler(
+                          this.context._id,
+                          sender._id
+                        )
+                      }
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={classes.ongoingRequests}>
+            <h3>Sent Friend Requests</h3>
+            <ul>
+              {this.state.sentFriendRequests.map(recipient => (
+                <li key={recipient._id}>
+                  <img className={classes.UserImage} src={recipient.avatar} />
+                  <span className={classes.SenderUsername}>
+                    {recipient.username}
+                  </span>
                   <button
-                    className={classes.FriendPageButton2}
-                    onClick={() =>
-                      this.cancelFriendRequestHandler(
-                        this.context._id,
-                        sender._id
-                      )
-                    }
+                    className={classes.FriendPageButton}
+                    onClick={() => this.cancelFriendRequestHandler(recipient._id, this.context._id)}
                   >
-                    Reject
+                    Cancel
                   </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className={classes.UserSearchArea}>
           <h2 className={classes.SearchHeader}>Looking for someone?</h2>
@@ -198,10 +225,7 @@ class ManageFriends extends Component {
               value={this.state.userSearchBarQuery}
               onChange={this.searchBarChangeHandler}
             />
-            <button
-              className={classes.BigSearchBtn}
-              onClick={this.getUsers}
-            >
+            <button className={classes.BigSearchBtn} onClick={this.getUsers}>
               SEARCH
             </button>
           </div>
@@ -232,9 +256,7 @@ class ManageFriends extends Component {
                           <Fragment>
                             <button
                               className={classes.FriendPageButton}
-                              onClick={() =>
-                                this.acceptFriendRequestHandler(foundUser._id)
-                              }
+                              onClick={() => this.acceptFriendRequestHandler(foundUser._id)}
                             >
                               Accept
                             </button>

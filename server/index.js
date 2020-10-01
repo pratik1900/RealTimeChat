@@ -66,11 +66,15 @@ mongoose
     const server = app.listen(5000, () => console.log("Server started!"));
     io.init(server);
     io.getIO().on("connect", socket => {
-    // console.log(socket.client.id)
-    console.log(socket.id);
-    // req.session.user.socket_id = socket.id;
-    // req.session.save();
-    socket.emit("login", "You are connected!");
+      console.log("New Socket Connection: ", socket.id);
+      
+      socket.on("startChat", data => {
+        console.log(`Chat started with ${data.person}`);
+        socket.emit("startChat")
+      })
+      // socket.on("join", chatRoomId => {
+      //   socket.join(chatRoomId);
+      // })
     });
   })
   .catch(err => console.log(err));

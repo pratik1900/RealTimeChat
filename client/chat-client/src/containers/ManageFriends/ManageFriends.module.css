@@ -8,18 +8,25 @@
   margin-top: 5%;
 }
 
-.pendingRequests {
+.LeftSection{
+  display: flex;
+  flex-direction: column;
   width: 30%;
+
 }
 
-.pendingRequests ul {
+.ongoingRequests {
+  width: 100%;
+}
+
+.ongoingRequests ul {
   width: 70%;
   display: flex;
   flex-direction: column;
   list-style: none;
 }
 
-.pendingRequests li {
+.ongoingRequests li {
   padding: 20px;
   background-color: rgb(75, 76, 77);
   margin-bottom: 15px;
@@ -190,7 +197,8 @@ hr.LineStyle {
     background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgba(0, 0, 0, 0.75),rgba(80, 77, 77, 0));
 }
 
-.pendingRequests h3 {
+.ongoingRequests h3,
+.sentRequests h3 {
   font-family: monospace;
   color: rgb(179, 50, 50);
   font-size: 20px;

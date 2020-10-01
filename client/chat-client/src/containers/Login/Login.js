@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import classes from "./Login.module.css";
 import axios from "../../axiosInstance";
-import io from 'socket.io-client';
 import Spinner from "../../components/Spinner/Spinner";
 import { withRouter } from "react-router-dom";
 
@@ -76,12 +75,7 @@ class Login extends Component {
           this.props.history.replace("/");
           this.props.loggedInHandler();
           this.props.setAuthStatus()
-          const socket = io("http://localhost:5000/");
 
-          socket.on("login", data => {
-            console.log(data);
-            console.log(socket.id);
-          });
         }
       }
     })

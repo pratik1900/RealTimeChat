@@ -102,7 +102,7 @@ router.get("/getUserInfo", controllers.getUserInfo);
 router.post("/addFriend", controllers.addFriend);
 router.post("/acceptFriendRequest", controllers.acceptFriendRequest);
 router.post("/cancelFriendRequest", controllers.cancelFriendRequest);
-router.get("/getPendingRequests", controllers.getPendingRequests);
+router.get("/getOngoingRequests", controllers.getOngoingRequests);
 
 router.post(
   "/changeProfileInfo",

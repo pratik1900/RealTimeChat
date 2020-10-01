@@ -10,6 +10,13 @@ import Logout from "./containers/Logout/Logout";
 import axios from "./axiosInstance";
 import Profile from "./containers/Profile/Profile";
 import ManageFriends from "./containers/ManageFriends/ManageFriends";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:5000/"); //initiating socket connection
+
+// socket.on("startChat", data => {
+//   console.log(`Starting Chat with ${data.person}`);
+// });
 
 
 class App extends Component {
@@ -21,9 +28,6 @@ class App extends Component {
   componentDidMount() {
     this.setAuthStatus()
   }
-  // componentDidUpdate() {
-  //   this.setAuthStatus()
-  // }
 
   setAuthStatus = () => {
     //prevents the navbar resetting to "Logged out" mode after refreshing the page
@@ -47,7 +51,7 @@ class App extends Component {
     return (
       <Router>
         <currentUserContext.Provider value={this.state.currentUser}>
-          <socketContext.Provider>
+          <socketContext.Provider value={socket}>
             <Fragment>
               <Navbar
                 isLoggedIn={this.state.isLoggedIn}

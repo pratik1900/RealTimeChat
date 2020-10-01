@@ -1,5 +1,7 @@
 const User = require("../models/user");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Events = require("events")
+const eventEmitter = new Events();
 
 module.exports.getTexts = (req, res) => {
   // console.log("inside getTexts.js");
@@ -39,9 +41,8 @@ module.exports.getFriends = (req, res) => {
 }
 
 module.exports.getUsers = (req, res) => {
-  User.findOne({ _id: req.session.user })
-  .then(currentUser => {
-    //finding all users with username matching search query, except those already friends with currentUser
+  if (req.body.searchQuery !== "") {
+    //finding all users with username matching search query
     User.find({
       username: { $regex: `${req.body.searchQuery}`, $options: "i" },
       _id: { $ne: { _id: req.session.user } },
@@ -57,7 +58,9 @@ module.exports.getUsers = (req, res) => {
         errMsg: err,
       });
     });
-  })
+  } else {
+    res.end();
+  }
 };
 
 module.exports.addFriend = (req, res) => {
@@ -142,19 +145,6 @@ module.exports.acceptFriendRequest = (req, res) => {
   });
 };
 
-// module.exports.rejectFriendRequest = (req, res) => {
-//   const recipient = req.session.user; //already obj
-//   const sender = mongoose.Types.ObjectId(req.body.senderId); //converting string to obj
-
-//   User.findOne({ _id: recipient })
-//   .then(recipientDoc => {
-//     User.findOne({ _id: sender })
-//     .then(senderDoc => {
-//       let temp = recipientDoc.pe
-//     })
-//   })
-// };
-
 module.exports.cancelFriendRequest = (req, res) => {
   const sender = mongoose.Types.ObjectId(req.body.senderId); //already obj
   const recipient = mongoose.Types.ObjectId(req.body.recipientId); //converting string to obj
@@ -193,12 +183,14 @@ module.exports.cancelFriendRequest = (req, res) => {
 
 // }
 
-module.exports.getPendingRequests = (req, res) => {
+module.exports.getOngoingRequests = (req, res) => {
   User.findOne({ _id: req.session.user })
-    .populate("pendingFriendRequests")
+    .populate("pendingFriendRequests sentFriendRequests")
     .then(user => {
+      console.log("ONGOING:", user);
       res.status(200).json({
         pendingFriendRequests: user.pendingFriendRequests,
+        sentFriendRequests: user.sentFriendRequests,
       });
     })
     .catch(err => {
@@ -207,5 +199,5 @@ module.exports.getPendingRequests = (req, res) => {
         errorMsg: err,
       });
     });
-}
+};
 

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import classes from "./FriendsList.module.css";
+import socketContext from "../../contexts/socketContext";
 
 
 import axios from "../../axiosInstance";
@@ -19,18 +20,22 @@ class FriendsList extends Component {
     this.getFriends();
   }
 
-  getFriends() {
+  getFriends = () => {
     axios
-      .get("/getFriends")
-      .then(result => {
-        console.log(result.data.friends);
-        const { friends } = result.data;
-        console.log("Friends:",friends)
-        this.setState({
-          friends: friends,
-        });
-      })
-      .catch(err => console.log(err));
+    .get("/getFriends")
+    .then(result => {
+      console.log(result.data.friends);
+      const { friends } = result.data;
+      console.log("Friends:",friends)
+      this.setState({
+        friends: friends,
+      });
+    })
+    .catch(err => console.log(err));
+  }
+
+  startChat = friendId => {
+    this.context.emit("startChat", { person: friendId });
   }
 
   render() {
@@ -46,7 +51,7 @@ class FriendsList extends Component {
         <hr className={classes.LineStyle} />
         <ul>
           {this.state.friends.map(friend => (
-            <li key={friend._id}>
+            <li key={friend._id} onClick={ () => this.startChat(friend._id) } >
               <img className={classes.UserImage} src={friend.avatar} />
               <span className={classes.FriendUsername}>{friend.username}</span>
             </li>
@@ -58,4 +63,5 @@ class FriendsList extends Component {
   }
 }
 
+FriendsList.contextType = socketContext;
 export default FriendsList;
