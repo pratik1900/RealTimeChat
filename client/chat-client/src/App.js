@@ -14,8 +14,8 @@ import io from "socket.io-client";
 
 const socket = io("http://localhost:5000/"); //initiating socket connection
 
-// socket.on("startChat", data => {
-//   console.log(`Starting Chat with ${data.person}`);
+// socket.on("connect", data => {
+//   console.log("I HAVE CONNECTED");
 // });
 
 

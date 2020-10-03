@@ -148,7 +148,7 @@ class Profile extends Component {
         <div className={classes.ProfileImgEdit}>
           <label htmlFor="ImageSelector">
             <div data-content="Change Image" className={classes.Overlay}>
-              <img src={this.state.userInfo.avatar} />
+              <img src={this.state.userInfo.avatar} alt="Profile Avatar"/>
             </div>
           </label>
           <input
@@ -208,7 +208,7 @@ class Profile extends Component {
         <h2>My Account</h2>
         <div className={classes.ProfileDetails}>
           <div className={classes.ProfileImg}>
-            <img src={this.state.userInfo.avatar} />
+            <img src={this.state.userInfo.avatar} alt="Profile Avatar"/>
           </div>
           <div className={classes.ProfileCreds}>
             <p>Username: {this.state.userInfo.username}</p>

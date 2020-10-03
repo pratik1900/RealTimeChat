@@ -1,11 +1,9 @@
 import React, { Component, Fragment } from 'react';
 
 import NavItems from './NavItems/NavItems';
-import Logo from './Logo/Logo';
-import { FaBars, FaClosedCaptioning } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import classes from './Navbar.module.css';
 import Sidebar from "../SideBar/SideBar";
-import currentUserContext from '../../contexts/currentUserContext';
 
 class Navbar extends Component {
   state = {

@@ -1,18 +1,20 @@
 const User = require("../models/user");
+const Conversation = require("../models/conversation");
 const mongoose = require('mongoose');
 const Events = require("events")
 const eventEmitter = new Events();
 
-module.exports.getTexts = (req, res) => {
-  // console.log("inside getTexts.js");
-  res.json({msg: 'Connected!'})
-};
 
-module.exports.postText = (req, res) => {
-  console.log(req.body.msg);
-  console.log('TEXT POSTED')
-  res.status(200).end();
-}
+// module.exports.getTexts = (req, res) => {
+//   // console.log("inside getTexts.js");
+//   res.json({msg: 'Connected!'})
+// };
+
+// module.exports.postText = (req, res) => {
+//   console.log(req.body.msg);
+//   console.log('TEXT POSTED')
+//   res.status(200).end();
+// }
 
 module.exports.getUserInfo = (req, res) => {
   User.findOne(mongoose.Types.ObjectId(req.session.user), 'username email avatar')
@@ -187,7 +189,6 @@ module.exports.getOngoingRequests = (req, res) => {
   User.findOne({ _id: req.session.user })
     .populate("pendingFriendRequests sentFriendRequests")
     .then(user => {
-      console.log("ONGOING:", user);
       res.status(200).json({
         pendingFriendRequests: user.pendingFriendRequests,
         sentFriendRequests: user.sentFriendRequests,

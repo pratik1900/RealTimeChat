@@ -6,6 +6,7 @@ import Backdrop from "../Backdrop/Backdrop";
 import { IoIosChatbubbles } from "react-icons/io";
 import { FaUserFriends } from "react-icons/fa";
 import FriendsList from "../../containers/FriendsList/FriendsList";
+import currentUserContext from "../../contexts/currentUserContext";
 
 export default class SideBar extends Component {
   state = {
@@ -66,7 +67,7 @@ export default class SideBar extends Component {
             </div>
             <div>
               <Route path="/friendsList">
-                <FriendsList closeSideBar={this.props.closeSideBar} />
+                <FriendsList closeSideBar={this.props.closeSideBar} currentUser={this.context}/>
               </Route>
             </div>
           </div>
@@ -74,4 +75,5 @@ export default class SideBar extends Component {
       </Fragment>
     );
   }
-}
+};
+SideBar.contextType = currentUserContext;

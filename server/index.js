@@ -68,13 +68,10 @@ mongoose
     io.getIO().on("connect", socket => {
       console.log("New Socket Connection: ", socket.id);
       
-      socket.on("startChat", data => {
-        console.log(`Chat started with ${data.person}`);
-        socket.emit("startChat")
-      })
-      // socket.on("join", chatRoomId => {
-      //   socket.join(chatRoomId);
-      // })
+      socket.on("join", data => {
+        console.log(`Chat started between ${data.currentUser} and ${data.talkTo}`);
+        // socket.join( data.talkTo );
+      });
     });
   })
   .catch(err => console.log(err));

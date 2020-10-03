@@ -8,8 +8,6 @@ import axios from "../../axiosInstance";
 import Spinner from "../../components/Spinner/Spinner";
 // import defaultUserImg from "../../assets/images/default-user-image.png";
 
-const userImg =
-  "https://res.cloudinary.com/pratik2/image/upload/v1600430288/realtimechat/default-user-image_o3qrpf.png";
 
 class FriendsList extends Component {
   state = {
@@ -34,8 +32,8 @@ class FriendsList extends Component {
     .catch(err => console.log(err));
   }
 
-  startChat = friendId => {
-    this.context.emit("startChat", { person: friendId });
+  startChat = (currentUser, friendId) => {
+    this.context.emit("join", { currentUser: currentUser, talkTo: friendId });
   }
 
   render() {
@@ -51,8 +49,8 @@ class FriendsList extends Component {
         <hr className={classes.LineStyle} />
         <ul>
           {this.state.friends.map(friend => (
-            <li key={friend._id} onClick={ () => this.startChat(friend._id) } >
-              <img className={classes.UserImage} src={friend.avatar} />
+            <li key={friend._id} onClick={ () => this.startChat(this.props.currentUser._id, friend._id) } >
+              <img className={classes.UserImage} src={friend.avatar} alt="Friend Avatar" />
               <span className={classes.FriendUsername}>{friend.username}</span>
             </li>
           ))}

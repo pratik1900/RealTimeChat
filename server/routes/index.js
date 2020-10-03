@@ -5,11 +5,11 @@ const User = require('../models/user');
 
 const { body } = require("express-validator");
 
-router.get(
-  "/",
-  controllers.getTexts
-);
-router.post("/", controllers.postText);
+// router.get(
+//   "/",
+//   controllers.getTexts
+// );
+// router.post("/", controllers.postText);
 
 // Auth Routes
 router.post(

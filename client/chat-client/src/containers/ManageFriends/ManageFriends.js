@@ -7,8 +7,6 @@ import Spinner from "../../components/Spinner/Spinner";
 import currentUserContext from "../../contexts/currentUserContext";
 // import defaultUserImg from "../../assets/images/default-user-image.png";
 
-const userImg =
-  "https://res.cloudinary.com/pratik2/image/upload/v1600430288/realtimechat/default-user-image_o3qrpf.png";
 
 class ManageFriends extends Component {
   state = {
@@ -160,7 +158,7 @@ class ManageFriends extends Component {
             <ul>
               {this.state.pendingFriendRequests.map(sender => (
                 <li key={sender._id}>
-                  <img className={classes.UserImage} src={sender.avatar} />
+                  <img className={classes.UserImage} src={sender.avatar} alt="Pending Request Profile Avatar" />
                   <span className={classes.SenderUsername}>
                     {sender.username}
                   </span>
@@ -201,7 +199,7 @@ class ManageFriends extends Component {
             <ul>
               {this.state.sentFriendRequests.map(recipient => (
                 <li key={recipient._id}>
-                  <img className={classes.UserImage} src={recipient.avatar} />
+                  <img className={classes.UserImage} src={recipient.avatar} alt="Sent Request Profile Avatar" />
                   <span className={classes.SenderUsername}>
                     {recipient.username}
                   </span>
@@ -239,6 +237,7 @@ class ManageFriends extends Component {
                         <img
                           className={classes.UserImage}
                           src={foundUser.avatar}
+                          alt="Found User Avatar"
                         />
                         <span className={classes.FoundUserUsername}>
                           {foundUser.username}
