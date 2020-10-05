@@ -133,6 +133,16 @@ module.exports.acceptFriendRequest = (req, res) => {
         temp = senderDoc.sentFriendRequests.filter(fr => !fr.equals(recipient));
         senderDoc.sentFriendRequests = temp;
         senderDoc.save();
+
+        const convo = new Conversation({
+          conversationType: "private",
+          participants: [
+            recipient,
+            sender
+          ]
+        });
+        convo.save();
+
         res.status(200).json({
           msg: "Friend Request Accepted.",
         });
@@ -202,3 +212,44 @@ module.exports.getOngoingRequests = (req, res) => {
     });
 };
 
+module.exports.getPrivateConversation = (req, res) => {
+  Conversation.findOne({ participants: { $size: 2, $all: req.body.participants } })
+  .then(convo => {
+    res.status(200).json({
+      textHistory: convo
+    })
+  })
+  .catch(err => {
+    console.log(err);
+    res.json({
+      errorMsg: err,
+    });
+  })
+}
+
+module.exports.sendText = (req, res) => {
+  console.log("BODY:", req.body);
+  Conversation.findOne({
+    participants: { $size: 2, $all: [ req.body.sender, req.body.recipient ] },
+  })
+    .then(convo => {
+      console.log(convo);
+
+      convo.messages.push({
+        text: req.body.msg,
+        sender: mongoose.Types.ObjectId(req.body.sender)
+      });
+      convo.save()
+      .then(result => {
+        res.status(200).json({
+          msg: "Success"
+        }) 
+      })
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        errorMsg: err,
+      });
+    });
+}

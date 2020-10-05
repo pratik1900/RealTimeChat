@@ -103,6 +103,8 @@ router.post("/addFriend", controllers.addFriend);
 router.post("/acceptFriendRequest", controllers.acceptFriendRequest);
 router.post("/cancelFriendRequest", controllers.cancelFriendRequest);
 router.get("/getOngoingRequests", controllers.getOngoingRequests);
+router.post("/getPrivateConversation", controllers.getPrivateConversation);
+router.post("/sendText", controllers.sendText);
 
 router.post(
   "/changeProfileInfo",

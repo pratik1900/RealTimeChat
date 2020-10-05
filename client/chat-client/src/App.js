@@ -58,7 +58,7 @@ class App extends Component {
                 loggedInHandler={this.loggedInHandler}
               />
 
-              <Route path="/" exact>
+              <Route path="/chat/:friendId" exact>
                 <Chatwindow />
               </Route>
 

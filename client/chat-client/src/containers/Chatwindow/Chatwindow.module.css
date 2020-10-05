@@ -1,35 +1,90 @@
 .Chatwindow {
   width: 100%;
   margin-bottom: 50px;
-  position: fixed;
+  position: absolute;
   bottom: 50px;
+  display: flex;
+  flex-direction: column;
 }
 
 .textForm {
   display: flex;
   justify-content: space-around;
+  width: 100%;
 }
 
 .textBox {
-  width: 80%;
+  width: 85%;
   height: 50px;
   border-radius: 10px;
   border: 1px solid gray;
+  outline: none;
 }
 
 .sendButton {
-  padding: 0 50px;
-  border-radius: 7px;
+  /* padding: 0 50px; */
   border: 1px;
   cursor: pointer;
-  background: orangered;
+  /* background: rgb(179, 50, 50); */
+  background-color: inherit;
+  color: rgb(179, 50, 50);
   transition: 0.1s ease-in;
   font-family: monospace;
   font-size: x-large;
 }
 
 .sendButton:hover {
-  background-color: rgb(156, 43, 2)
+  background-color: rgb(156, 43, 2);
+  color: black;
+}
+
+.chatHeader{
+  width: 100%;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  background-color: rebeccapurple;
+  box-sizing: content-box;
+  margin-left: 0;
+  z-index: 100 !important;
+}
+
+.chatHeader h3 {
+  margin-left: 1%;
+}
+.chatHistory {
+  flex: 1;
+}
+
+.chatHistory ul {
+  width: 100%;
+  /* margin: 0 auto ; */
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+}
+
+.chatHistory li {
+  width: 90%;
+  margin-bottom: 1%;
+  padding: 1%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sentText {
+  background-color: rgb(0, 132, 255);
+  padding: 2%;
+  align-self: flex-end;
+}
+
+.receivedText {
+  background-color: white;
+  padding: 2%;
+  align-self: flex-start;
 }
 
 body {

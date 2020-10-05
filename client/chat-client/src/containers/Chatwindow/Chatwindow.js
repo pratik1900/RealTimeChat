@@ -1,69 +1,109 @@
 import React, { Component } from "react";
 import classes from "./Chatwindow.module.css";
 import axios from '../../axiosInstance';
+import { MdSend } from "react-icons/md";
+import { withRouter } from "react-router-dom";
+import currentUserContext from "../../contexts/currentUserContext";
 
 class Chatwindow extends Component {
   state = {
-    textMsg: ''
+    textHistory: [
+      "hey there :D",
+      "how're you doing?",
+      "I'm great, thanks. How about you?",
+    ],
+    inputValue: "",
+  };
+
+  getConversations = () => {
+    axios.post("/getPrivateConversation", {
+      participants: [
+        this.context._id,
+        this.props.match.params.friendId
+      ]
+    })
+    .then(results => {
+      this.setState({
+        textHistory: results.data.textHistory.messages
+      })
+    }, console.log(this.state))
+    .catch(err => console.log(err))
   }
 
   componentDidMount() {
-    axios.get('/')
-    .then(result => {
-      //get text history
-    })
-    .catch(err => {
-      // if(err.response.status === 401) {
-      //   //Not authenticated, redirecting to Login page.
-      //   this.props.history.replace('/login');
-      // } else {
-      //   console.log(err);
-      // }
-    })
+    this.getConversations();
   }
 
   changeHandler = event => {
     this.setState({
-      textMsg: event.target.value,
+      inputValue: event.target.value,
     });
-  }
+  };
 
   sendHandler = event => {
     event.preventDefault();
-    axios.post('/', {
-      msg: this.state.textMsg
+    axios.post('/sendText', {
+      sender: this.context._id,
+      recipient: this.props.match.params.friendId,
+      msg: this.state.inputValue
     })
-    .then(response => { 
+    .then(response => {
       console.log(response.data);
       this.setState(prevState => {
         return {
-          textMsg: ''
+          // textHistory: [...prevState.textHistory, `${prevState.inputValue}`],
+          inputValue: ""
         }
       })
+      this.getConversations();
     })
     .catch(err => console.log(err))
-  }
+  };
+
+  // enterKeySendHandler = event => {
+  //   event.preventDefault();
+  //   if (!event.key === "Enter") {
+  //     return;
+  //   } else {
+  //     this.sendHandler(event)
+  //   }
+  // }
 
   render() {
     return (
       <div className={classes.Chatwindow}>
-        <form className={classes.textForm} action="">
+        <div className={classes.chatHeader}>
+          <h3>Friend Name</h3>
+        </div>
+        <div className={classes.chatHistory}>
+          <ul>
+            {this.state.textHistory.map(text => (
+              <li>
+                <div className={text.sender === this.context._id ? classes.sentText : classes.receivedText }>{text.text}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={classes.textForm}>
           <input
             className={classes.textBox}
             type="text"
-            onChange={ e => this.changeHandler(e)}
-            value={this.state.textMsg}
+            // onKeyPress={ (e) => { if (e.keyCode===13){ this.enterKeySendHandler() }}}
+            onChange={e => this.changeHandler(e)}
+            value={this.state.inputValue}
           />
-          <button 
+          <button
             className={classes.sendButton}
-            onClick={ e => this.sendHandler(e) }
+            onClick={e => this.sendHandler(e)}
           >
-            Send
+            <MdSend style={{ fontSize: "34px" }} />
           </button>
-        </form>
+        </div>
       </div>
     );
   }
 }
 
-export default Chatwindow;
+Chatwindow.contextType = currentUserContext;
+
+export default withRouter(Chatwindow);

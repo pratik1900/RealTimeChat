@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import classes from "./FriendsList.module.css";
 import socketContext from "../../contexts/socketContext";
 
@@ -33,7 +33,9 @@ class FriendsList extends Component {
   }
 
   startChat = (currentUser, friendId) => {
-    this.context.emit("join", { currentUser: currentUser, talkTo: friendId });
+    // this.context.emit("join", { currentUser: currentUser, talkTo: friendId });
+    this.props.closeSideBar();
+    this.props.history.push(`/chat/${friendId}`)
   }
 
   render() {
@@ -62,4 +64,4 @@ class FriendsList extends Component {
 }
 
 FriendsList.contextType = socketContext;
-export default FriendsList;
+export default withRouter(FriendsList);
