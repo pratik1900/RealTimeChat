@@ -67,7 +67,11 @@ export default class SideBar extends Component {
             </div>
             <div>
               <Route path="/friendsList">
-                <FriendsList closeSideBar={this.props.closeSideBar} currentUser={this.context}/>
+                <FriendsList
+                  closeSideBar={this.props.closeSideBar}
+                  currentUser={this.context}
+                  setRoomIdHandler={this.props.setRoomIdHandler}
+                />
               </Route>
             </div>
           </div>

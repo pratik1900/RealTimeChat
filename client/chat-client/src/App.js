@@ -13,16 +13,15 @@ import ManageFriends from "./containers/ManageFriends/ManageFriends";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:5000/"); //initiating socket connection
+console.log("INSTANCE: ", socket)
 
-// socket.on("connect", data => {
-//   console.log("I HAVE CONNECTED");
-// });
 
 
 class App extends Component {
   state = {
     isLoggedIn: false,
-    currentUser: null //to store current logged in user info
+    currentUser: null, //to store current logged in user info
+    roomId: null
   }
 
   componentDidMount() {
@@ -47,6 +46,10 @@ class App extends Component {
     })
   }
 
+  setRoomIdHandler = roomId => {
+    this.setState({ roomId: roomId });
+  }
+
   render() {
     return (
       <Router>
@@ -56,10 +59,12 @@ class App extends Component {
               <Navbar
                 isLoggedIn={this.state.isLoggedIn}
                 loggedInHandler={this.loggedInHandler}
+                setRoomIdHandler={this.setRoomIdHandler}
               />
 
+              {/* passing socket to chatwindow as a prope (instead of using context) as its already using another context */}
               <Route path="/chat/:friendId" exact>
-                <Chatwindow />
+                <Chatwindow socket={socket} roomId={this.state.roomId} />
               </Route>
 
               <Route path="/login">

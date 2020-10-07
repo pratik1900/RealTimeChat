@@ -105,6 +105,7 @@ router.post("/cancelFriendRequest", controllers.cancelFriendRequest);
 router.get("/getOngoingRequests", controllers.getOngoingRequests);
 router.post("/getPrivateConversation", controllers.getPrivateConversation);
 router.post("/sendText", controllers.sendText);
+router.post("/getConversationId", controllers.getConversationId);
 
 router.post(
   "/changeProfileInfo",

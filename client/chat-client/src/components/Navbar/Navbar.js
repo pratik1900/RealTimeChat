@@ -48,6 +48,7 @@ class Navbar extends Component {
               toggleSideBar={this.toggleSideBar}
               closeSideBar={this.closeSideBar}
               showSidebar={this.state.showSidebar}
+              setRoomIdHandler={this.props.setRoomIdHandler}
             />
           </Fragment>
         ) : null}

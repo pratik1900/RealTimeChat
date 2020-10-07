@@ -215,8 +215,12 @@ module.exports.getOngoingRequests = (req, res) => {
 module.exports.getPrivateConversation = (req, res) => {
   Conversation.findOne({ participants: { $size: 2, $all: req.body.participants } })
   .then(convo => {
-    res.status(200).json({
-      textHistory: convo
+    User.findOne({ _id: req.body.participants[1] }, "username avatar")
+    .then(friend => {
+      res.status(200).json({
+        textHistory: convo,
+        friendInfo: friend
+      });
     })
   })
   .catch(err => {
@@ -252,4 +256,21 @@ module.exports.sendText = (req, res) => {
         errorMsg: err,
       });
     });
+}
+
+module.exports.getConversationId = (req, res) => {
+  Conversation.findOne({
+    participants: { $size: 2, $all: [req.body.currentUser, req.body.friendId] },
+  }, "_id")
+  .then(convo => {
+    res.status(200).json({
+      conversation: convo
+    })
+  })
+  .catch(err => {
+    console.log(err);
+      res.json({
+        errorMsg: err,
+      });
+  })
 }

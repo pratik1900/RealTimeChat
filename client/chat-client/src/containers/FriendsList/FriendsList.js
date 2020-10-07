@@ -6,6 +6,7 @@ import socketContext from "../../contexts/socketContext";
 
 import axios from "../../axiosInstance";
 import Spinner from "../../components/Spinner/Spinner";
+// import currentUserContext from "../../contexts/currentUserContext";
 // import defaultUserImg from "../../assets/images/default-user-image.png";
 
 
@@ -33,9 +34,21 @@ class FriendsList extends Component {
   }
 
   startChat = (currentUser, friendId) => {
-    // this.context.emit("join", { currentUser: currentUser, talkTo: friendId });
+    
+    axios
+      .post("/getConversationId", {
+        currentUser: currentUser,
+        friendId: friendId,
+      })
+      .then(result => {
+        let roomId = result.data.conversation._id;
+        this.props.setRoomIdHandler(roomId);
+        this.context.emit("join", { roomId: roomId });
+      })
+      .catch(err => console.log(err));
+    
     this.props.closeSideBar();
-    this.props.history.push(`/chat/${friendId}`)
+    this.props.history.push(`/chat/${friendId}`);
   }
 
   render() {
