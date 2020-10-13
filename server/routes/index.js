@@ -97,6 +97,7 @@ router.post('/logout', authControllers.postLogout)
 
 router.get("/getAuthStatus", authControllers.getAuthStatus);
 router.get("/getFriends", controllers.getFriends);
+router.get("/getLatestConversations", controllers.getLatestConversations);
 router.post("/getUsers", controllers.getUsers);
 router.get("/getUserInfo", controllers.getUserInfo);
 router.post("/addFriend", controllers.addFriend);
@@ -106,6 +107,8 @@ router.get("/getOngoingRequests", controllers.getOngoingRequests);
 router.post("/getPrivateConversation", controllers.getPrivateConversation);
 router.post("/sendText", controllers.sendText);
 router.post("/getConversationId", controllers.getConversationId);
+router.post("/setTextStatustoSeen", controllers.setTextStatustoSeen);
+router.post("/setTextStatustoSeenAll", controllers.setTextStatustoSeenAll);
 
 router.post(
   "/changeProfileInfo",

@@ -39,7 +39,6 @@ a {
 .UserImage {
   width: 50px;
   height: auto;
-  border-radius: 50%;
 }
 
 .FriendUsername {
@@ -78,12 +77,4 @@ hr.LineStyle {
   background-image: linear-gradient(to right, rgba(80, 77, 77, 0), rgb(179, 50, 50),rgba(80, 77, 77, 0));
   color: black;
   /* transform: scale(1.05) */
-}
-
-.UnseenCounter {
-  margin-left: 3rem;
-  color: cornsilk;
-  padding: 5%;
-  background-color: rgb(179, 50, 50);
-  border-radius: 30%;
 }

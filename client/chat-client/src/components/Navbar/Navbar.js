@@ -36,22 +36,24 @@ class Navbar extends Component {
   render() {
     return (
       <div className={classes.Navbar}>
-        {this.props.isLoggedIn ? (
-          <Fragment>
-            <span style={{ cursor: "pointer" }}>
-              <FaBars
-                className={classes.HamburgerIcon}
-                onClick={this.toggleSideBar}
+        <div>
+          {this.props.isLoggedIn ? (
+            <Fragment>
+              <span style={{ cursor: "pointer" }}>
+                <FaBars
+                  className={classes.HamburgerIcon}
+                  onClick={this.toggleSideBar}
+                />
+              </span>
+              <Sidebar
+                toggleSideBar={this.toggleSideBar}
+                closeSideBar={this.closeSideBar}
+                showSidebar={this.state.showSidebar}
+                setRoomIdHandler={this.props.setRoomIdHandler}
               />
-            </span>
-            <Sidebar
-              toggleSideBar={this.toggleSideBar}
-              closeSideBar={this.closeSideBar}
-              showSidebar={this.state.showSidebar}
-              setRoomIdHandler={this.props.setRoomIdHandler}
-            />
-          </Fragment>
-        ) : null}
+            </Fragment>
+          ) : null}
+        </div>
 
         <nav>
           <NavItems isLoggedIn={this.props.isLoggedIn} />

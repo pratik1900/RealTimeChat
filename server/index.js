@@ -65,22 +65,38 @@ mongoose
     console.log("Connected to DB.");
     const server = app.listen(5000, () => console.log("Server started!"));
     io.init(server);
-    io.getIO().on("connect", socket => {
-      console.log("New Socket Connection: ", socket.__proto__);
-      
+    io.getIO().on("connect", socket => { 
       socket.on("join", data => {
-        console.log(`New Room ID is: ${data.roomId}`);
         socket.join(data.roomId);
         socket.emit()
       });
 
       socket.on("message", data => {
-        const { sender, recipient, roomId, msg } = data;
+        const { sender, recipient, roomId, msg, msgId } = data;
         socket.to(`${roomId}`).emit("message", {
           sender: sender,
           recipient: recipient,
-          msg: msg
+          roomId: roomId,
+          msg: msg,
+          msgId: msgId
         })
+      });
+
+      socket.on("typingStatusChange", data => {
+        const { typingStatus, roomId } = data;
+        socket.to(`${roomId}`).emit("typingStatusChange", {
+          typingStatus: typingStatus
+        });
+      });
+
+      socket.on("setTextStatusToSeen", data => {
+        const { sender, recipient, roomId, msg, msgId } = data;
+        socket.to(`${roomId}`).emit("setTextStatusToSeen", { msgId: msgId });
+      });
+
+      socket.on("setTextStatusToSeenAll", data => {
+        const { sender, recipient, roomId } = data;
+        socket.to(`${roomId}`).emit("setTextStatusToSeenAll");
       });
     });
   })

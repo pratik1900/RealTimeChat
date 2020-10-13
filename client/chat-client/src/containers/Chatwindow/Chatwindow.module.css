@@ -18,12 +18,13 @@ body{
   top: 50px;
   left: 0;
   right: 0;
-  background-color: rebeccapurple;
+  background-color: rgb(179, 50, 50);
   box-sizing: content-box;
   margin-left: 0;
   z-index: 100 !important;
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 0.5%;
   height: 50px;
 }
@@ -52,7 +53,8 @@ body{
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 100%;
+  width: 95%;
+  margin-left: 2.5%;
   height: 10%;
   position: fixed;
   bottom: 0;
@@ -82,7 +84,9 @@ body{
 
 .chatHeader h3 {
   margin-left: 1%;
-  color: rgb(179, 50, 50);
+  color: black;
+  font-family: monospace;
+  font-size: 24px;
 }
 
 
@@ -94,6 +98,7 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 100px;
 }
 
 .textMsg {
@@ -108,19 +113,30 @@ body{
 }
 
 .sentText {
-  background-color: rgb(0, 132, 255);
-  padding: 2%;
+  /* background-color: rgb(0, 132, 255); */
+  background-color: #191A1C;
+  border: 1px solid rgb(179, 50, 50);
+  padding: 0 2%;
   align-self: flex-end;
   border-radius: 5px;
   max-width: 45%;
+  color: cornsilk;
+  font-family: monospace;
+  font-size: 18px;
 }
 
 .receivedText {
-  background-color: white;
+  /* background-color: white; */
+  background-color: #191A1C;
+  border: 1px solid rgb(179, 50, 50);
   padding: 2%;
   align-self: flex-start;
   border-radius: 5px;
   max-width: 45%;
+  color: cornsilk;
+  font-family: monospace;
+  font-size: 18px;
+
 }
 
 .senderTitle {
@@ -128,12 +144,43 @@ body{
  margin-bottom: 0.05%;
  color: rgb(179, 50, 50);
  font-weight: 700;
- font-size: 16px;
+ font-size: 22px;
+ margin-top: 10px;
 }
 
 .FriendImage {
   width: 50px;
   height: auto;
+  border-radius: 50%;
+}
+
+.TypingIndicator{
+  color: rgb(179, 50, 50);
+  font-size: 18px;
+  align-self: flex-start;
+  margin-left: 5%;
+  margin-top: 0.5%;
+}
+
+.TypingIndicator::after {
+  content: '\200b';
+  font-family: monospace;
+}
+
+.friendPicAndNameDiv {
+  position: relative;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.smallFriendPic {
+  width: 50px;
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 50%;
 }
 
 body {

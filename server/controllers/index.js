@@ -1,20 +1,6 @@
 const User = require("../models/user");
 const Conversation = require("../models/conversation");
 const mongoose = require('mongoose');
-const Events = require("events")
-const eventEmitter = new Events();
-
-
-// module.exports.getTexts = (req, res) => {
-//   // console.log("inside getTexts.js");
-//   res.json({msg: 'Connected!'})
-// };
-
-// module.exports.postText = (req, res) => {
-//   console.log(req.body.msg);
-//   console.log('TEXT POSTED')
-//   res.status(200).end();
-// }
 
 module.exports.getUserInfo = (req, res) => {
   User.findOne(mongoose.Types.ObjectId(req.session.user), 'username email avatar')
@@ -26,7 +12,6 @@ module.exports.getUserInfo = (req, res) => {
     .catch(err => {
       console.log(err);
     });
-
 }
 
 module.exports.getFriends = (req, res) => {
@@ -34,13 +19,54 @@ module.exports.getFriends = (req, res) => {
   .populate("friends")
   .then(user => {
     if(user) {
-      res.status(200).json({
-        friends: user.friends
-      });
+      const friends = user.friends;
+      friends.sort( (a, b) => a.username.localeCompare(b.username));  //sorting by username
+      let friendsWithCount;
+      
+      Conversation.find({ participants: { $size: 2, $in: req.session.user } })
+      .then(convos => {
+        const unseen = convos.map(con => {
+          const unseenCount = con.messages.filter(msg => msg.status === "sent").length;
+          const friendId = con.participants.filter(p => !p.equals(req.session.user))[0]
+          return {
+            friendId: friendId,
+            unseenCount: unseenCount
+          }
+        });
+
+        friendsWithCount = friends.map(frnd => {
+          const unseenCount = unseen.find(val => frnd._id.equals(val.friendId )).unseenCount; 
+          return {
+            _id: frnd._id,
+            username: frnd.username,
+            avatar: frnd.avatar,
+            unseenCount: unseenCount 
+          }
+        });
+        res.status(200).json({
+          friends: friendsWithCount,
+        });
+        // console.log("FRIENDS WITH COUNT: ", friendsWithCount);
+      })
+      .catch(err => console.log(err));
     }
   })
   .catch(err => console.log(err))
 }
+
+module.exports.getLatestConversations = (req, res) => {
+  Conversation.find({participants: req.session.user })
+  .then(conversations => {
+    if (conversations){
+      const convos = conversations.sort((a, b) => {
+        return a.messages[a.messages.length - 1].sentAt - b.messages[b.messages.length - 1].sentAt;
+      });
+      res.status(200).json({ convos: convos })
+    }
+  })
+  .catch(err => console.log(err))
+};
+
 
 module.exports.getUsers = (req, res) => {
   if (req.body.searchQuery !== "") {
@@ -218,6 +244,7 @@ module.exports.getPrivateConversation = (req, res) => {
     User.findOne({ _id: req.body.participants[1] }, "username avatar")
     .then(friend => {
       res.status(200).json({
+        roomId: convo._id,
         textHistory: convo,
         friendInfo: friend
       });
@@ -232,23 +259,22 @@ module.exports.getPrivateConversation = (req, res) => {
 }
 
 module.exports.sendText = (req, res) => {
-  console.log("BODY:", req.body);
   Conversation.findOne({
     participants: { $size: 2, $all: [ req.body.sender, req.body.recipient ] },
   })
     .then(convo => {
-      console.log(convo);
-
       convo.messages.push({
         text: req.body.msg,
         sender: mongoose.Types.ObjectId(req.body.sender)
       });
       convo.save()
       .then(result => {
+        const msgId = result.messages[result.messages.length - 1]._id;
         res.status(200).json({
-          msg: "Success"
-        }) 
-      })
+          msg: "SUCCESS",
+          msgId: msgId
+        }); 
+      });
     })
     .catch(err => {
       console.log(err);
@@ -273,4 +299,53 @@ module.exports.getConversationId = (req, res) => {
         errorMsg: err,
       });
   })
+};
+
+module.exports.setTextStatustoSeen = (req, res) => {
+  const { sender, recipient, roomId, msg, msgId } = req.body;
+  
+  Conversation.findOne({
+    participants: { $size: 2, $all: [sender, recipient] },
+  })
+    .then(convo => {
+      const messages = convo.messages.map(doc => {
+        if (doc._id.equals(mongoose.Types.ObjectId(msgId))) {
+          doc.status = "seen";
+          return doc;
+        } else {
+          return doc;
+        }
+      });
+      convo.messages = messages;
+      return convo.save();
+    })
+    .then(result => {
+      res.status(200).json({ response: "Success" });
+    })
+    .catch(err => console.log(err));
 }
+
+module.exports.setTextStatustoSeenAll = (req, res) => {
+  const { sender, recipient, roomId } = req.body;
+
+  Conversation.findOne({
+    participants: { $size: 2, $all: [sender, recipient] },
+  })
+    .then(convo => {
+      const messages = convo.messages.map(doc => {
+        if (doc.sender.equals(mongoose.Types.ObjectId(sender)) && doc.status === "sent") {
+          console.log("BINGO");
+          doc.status = "seen";
+          return doc;
+        } else {
+          return doc;
+        }
+      });
+      convo.messages = messages;
+      return convo.save();
+    })
+    .then(result => {
+      res.status(200).json({ response: "Success" });
+    })
+    .catch(err => console.log(err));
+};

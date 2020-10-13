@@ -17,18 +17,21 @@ class FriendsList extends Component {
 
   componentDidMount() {
     this.getFriends();
+
+    this.context.on("message", () => {
+      this.getFriends();
+    })
   }
 
   getFriends = () => {
     axios
     .get("/getFriends")
     .then(result => {
-      console.log(result.data.friends);
       const { friends } = result.data;
       console.log("Friends:",friends)
       this.setState({
         friends: friends,
-      });
+      }, () => console.log(this.state));
     })
     .catch(err => console.log(err));
   }
@@ -67,6 +70,9 @@ class FriendsList extends Component {
             <li key={friend._id} onClick={ () => this.startChat(this.props.currentUser._id, friend._id) } >
               <img className={classes.UserImage} src={friend.avatar} alt="Friend Avatar" />
               <span className={classes.FriendUsername}>{friend.username}</span>
+              {friend.unseenCount === 0 ? null :
+                <span className={classes.UnseenCounter}>{friend.unseenCount}</span>
+              }
             </li>
           ))}
         </ul>

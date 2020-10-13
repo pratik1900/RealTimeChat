@@ -7,12 +7,10 @@
   margin-top: 15vh;
   padding-top: 1%;
   padding-bottom: 1%;
-  border-radius: 20px;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.7),
-              -5px -5px 10px rgba(255,255,255,0.1);
+  border: 1px solid rgb(179, 50, 50);
 }
 
-.LoginForm input {
+/* .LoginForm input {
   margin: 10px 0;
   width: 60%;
   padding: 20px;
@@ -24,29 +22,40 @@
               -2px -2px 5px rgba(255,255,255,0.1);
   background: transparent;
   color: cornsilk;
+} */
+
+.LoginForm input {
+  margin: 10px 0;
+  width: 60%;
+  padding: 20px;
+  border: 1px solid rgb(179, 50, 50);
+  outline: none;
+  font-size: 18px;
+  background: transparent;
+  color:  rgb(179, 50, 50);
 }
 
-.LoginForm input:focus {
+/* .LoginForm input:focus {
   box-shadow: inset 3px 3px 5px rgba(0,0,0,0.7),
               inset -2px -2px 5px rgba(255,255,255,0.1);
-}
+} */
 
 /* Placeholder Color Change */
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: cornsilk;
+  color: rgb(179, 50, 50);
   font-family: monospace;
   font-size: 22px;
   opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: white;
+  color:  rgb(179, 50, 50);
   font-family: monospace;
   font-size: 22px;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-  color: white;
+  color:  rgb(179, 50, 50);
   font-family: monospace;
   font-size: 22px;
 }
@@ -57,6 +66,7 @@
   padding-bottom: 5%;
   font-family: monospace;
   font-size: xx-large;
+  color: rgb(179, 50, 50);
 }
 
 .LoginForm button {
@@ -67,19 +77,18 @@
   font-size: 24px;
   font-weight: 700;
   background-color: inherit;
-  border-radius: 50px;
   border: 0;
   outline: none;
   cursor: pointer;
   transition: 0.2s ease-out;
-  box-shadow: 3px 3px 5px rgba(0,0,0,0.7),
-            -2px -2px 5px rgba(255,255,255,0.2);
+  border: 1px solid rgb(179, 50, 50);
+  color: rgb(179, 50, 50);
 }
 
 .LoginForm button:hover {
   transform: scale(1.05);
-    box-shadow: 5px 5px 7px rgba(0,0,0,0.7),
-              -3px -3px 7px rgba(255,255,255,0.2);
+    /* box-shadow: 5px 5px 7px rgba(0,0,0,0.7),
+              -3px -3px 7px rgba(255,255,255,0.2); */
 }
 
 .LoginForm button:active{

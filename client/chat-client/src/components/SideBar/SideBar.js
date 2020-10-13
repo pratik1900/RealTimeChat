@@ -7,6 +7,7 @@ import { IoIosChatbubbles } from "react-icons/io";
 import { FaUserFriends } from "react-icons/fa";
 import FriendsList from "../../containers/FriendsList/FriendsList";
 import currentUserContext from "../../contexts/currentUserContext";
+import LatestConversations from '../../containers/LatestConversations/LatestConversations';
 
 export default class SideBar extends Component {
   state = {
@@ -68,6 +69,14 @@ export default class SideBar extends Component {
             <div>
               <Route path="/friendsList">
                 <FriendsList
+                  closeSideBar={this.props.closeSideBar}
+                  currentUser={this.context}
+                  setRoomIdHandler={this.props.setRoomIdHandler}
+                />
+              </Route>
+
+              <Route path="/chats">
+                <LatestConversations
                   closeSideBar={this.props.closeSideBar}
                   currentUser={this.context}
                   setRoomIdHandler={this.props.setRoomIdHandler}

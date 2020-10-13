@@ -160,7 +160,7 @@
 
 .FriendPageButton {
   cursor: pointer;
-  padding: 1%;
+  padding: 3%;
   background-color: rgb(179, 50, 50);
   border: none;
   font-weight: 600;
@@ -181,7 +181,7 @@
 
 .FriendPageButton:hover {
   transform: scale(1.1);
-  border: 2px solid black;
+  border: 2px solid rgb(179, 50, 50);
 }
 
 .FriendPageButton2:hover {

@@ -17,6 +17,11 @@ const conversationSchema = new Schema({
         type: Date,
         default: Date.now,
       },
+      status: {
+        type: String,
+        default: "sent",
+        enum: ["sent", "seen"]
+      }
     },
   ],
   conversationType: {

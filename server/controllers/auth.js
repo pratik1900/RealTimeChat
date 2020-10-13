@@ -78,7 +78,6 @@ module.exports.postLogout = (req, res) => {
 module.exports.getAuthStatus = (req, res) => {
   User.findOne({ _id: req.session.user }, "username email avatar friends pendingFriendRequests sentFriendRequests")
   .then(currentUser => {
-    console.log("CURRENTLY SIGNED IN:", req.session.user);
     res.json({ authStatus: req.session.isLoggedIn, currentUser: currentUser });
   })
   .catch(err => {

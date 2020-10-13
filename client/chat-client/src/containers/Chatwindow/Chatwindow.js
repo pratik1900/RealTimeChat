@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import classes from "./Chatwindow.module.css";
 import axios from '../../axiosInstance';
 import { MdSend } from "react-icons/md";
+import { BsCheck, BsCheckAll } from "react-icons/bs";
 import { withRouter } from "react-router-dom";
 import Spinner from "../../components/Spinner/Spinner";
 import currentUserContext from "../../contexts/currentUserContext";
@@ -15,38 +16,90 @@ class Chatwindow extends Component {
   state = {
     isLoading: true,
     textHistory: null,
+    roomId: null,
     inputValue: "",
     friendInfo: null,
+    isTyping: false,
+    typingTimeout: null,
+    otherPersonIsTyping: false,
   };
 
-  getConversations = () => {
+  getConversations = (shouldScroll = false) => {
     axios
       .post("/getPrivateConversation", {
         participants: [this.context._id, this.props.match.params.friendId],
       })
       .then(results => {
         this.setState({
+          roomId: results.data.roomId,
           textHistory: results.data.textHistory.messages,
           friendInfo: results.data.friendInfo,
           isLoading: false,
-        });
-        this.scrollToBottom();
-      }, console.log(this.state))
+        }, () => { this.setTextStatusToSeenAll(this.state.friendInfo._id,this.context._id,this.state.roomId) });
+        this.scrollToBottom(shouldScroll);
+      })
       .catch(err => console.log(err));
   };
 
   componentDidMount() {
-    this.getConversations();
-    console.log(this.props);
+    this.getConversations(true);
 
+
+    //SETTING UP SOCKET LISTENERS
     this.props.socket.on("message", socket => {
+      const { sender, recipient, roomId, msg, msgId } = socket;
+      this.setTextStatusToSeen(sender, recipient, roomId,  msg, msgId);
       this.getConversations();
     });
+
+    this.props.socket.on("typingStatusChange", socket => {
+      console.log("OTHER PERSON:", socket);
+      this.setState({
+        otherPersonIsTyping: socket.typingStatus,
+      });
+    });
+
+    this.props.socket.on("setTextStatusToSeen", socket => {
+      this.getConversations();
+    });
+
+    this.props.socket.on("setTextStatusToSeenAll", socket => {
+      this.getConversations();
+    });
+    // --*--
+  }
+
+  componentWillUnmount() {
+    //Removing Listeners
+    this.props.socket.off("message")
+    this.props.socket.off("typingStatusChange");
+    this.props.socket.off("setTextStatusToSeen");
+    this.props.socket.off("setTextStatusToSeenAll");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isTyping !== prevState.isTyping) {
+      this.props.socket.emit("typingStatusChange", {
+        typingStatus: this.state.isTyping,
+        roomId: this.props.roomId,
+      });
+    }
   }
 
   changeHandler = event => {
+    //debouncing
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+
     this.setState({
       inputValue: event.target.value,
+      isTyping: true,
+      typingTimeout: setTimeout(() => {
+        this.setState({
+          isTyping: false,
+        });
+      }, 1000),
     });
   };
 
@@ -59,14 +112,13 @@ class Chatwindow extends Component {
         msg: this.state.inputValue,
       })
       .then(response => {
-        console.log(response.data);
-
         //display latest chat state to recipient in real-time
         this.props.socket.emit("message", {
           sender: this.context._id,
           recipient: this.props.match.params.friendId,
           roomId: this.props.roomId,
           msg: this.state.inputValue,
+          msgId: response.data.msgId,
         });
 
         this.setState(prevState => {
@@ -77,7 +129,7 @@ class Chatwindow extends Component {
         //loads latest chat state for sender
         this.getConversations();
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log("CAUGHT:", err));
   };
 
   enterKeySendHandler = event => {
@@ -91,8 +143,48 @@ class Chatwindow extends Component {
     }
   };
 
-  scrollToBottom = () => {
-    this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  scrollToBottom = (shouldScroll = false) => {
+    if(shouldScroll) {
+      this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  setTextStatusToSeen = (sender, recipient, roomId, msg, msgId) => {
+    // set status to seen
+    axios.post("/setTextStatustoSeen", {
+      sender: sender,
+      recipient: recipient,
+      roomId: roomId,
+      msg: msg,
+      msgId: msgId
+    })
+    .then(result => {
+      this.props.socket.emit("setTextStatusToSeen", {
+        sender: sender,
+        recipient: recipient,
+        roomId: roomId,
+        msg: msg,
+        msgId: msgId,
+      });
+    })
+    .catch(err => console.log(err))
+  };
+
+  setTextStatusToSeenAll = (sender, recipient, roomId) => {
+    // set status to seen
+    axios.post("/setTextStatustoSeenAll", {
+      sender: sender,
+      recipient: recipient,
+      roomId: roomId
+    })
+    .then(result => {
+      this.props.socket.emit("setTextStatusToSeenAll", {
+        sender: sender,
+        recipient: recipient,
+        roomId: roomId,
+      });
+    })
+    .catch(err => console.log(err))
   };
 
   render() {
@@ -121,19 +213,48 @@ class Chatwindow extends Component {
                 >
                   {
                     <Fragment>
-                      <h5 className={classes.senderTitle}>
-                        {text.sender === this.context._id
-                          ? "You"
-                          : this.state.friendInfo.username}
-                      </h5>
+                      <div className={classes.friendPicAndNameDiv}>
+                        <img
+                          className={classes.smallFriendPic}
+                          src={
+                            text.sender === this.context._id
+                              ? this.context.avatar
+                              : this.state.friendInfo.avatar
+                          }
+                          alt={
+                            text.sender === this.context._id
+                              ? "Your Pic"
+                              : "Friend Pic"
+                          }
+                        />
+                        <h5 className={classes.senderTitle}>
+                          {text.sender === this.context._id
+                            ? "You"
+                            : this.state.friendInfo.username}
+                        </h5>
+                      </div>
                       <p>{text.text}</p>
+                      <p>
+                        {text.sender === this.context._id ? (
+                          text.status === "seen" ? (
+                            <BsCheckAll style={{ color: "#0084ff", marginLeft: "90%" }} />
+                          ) : (
+                            <BsCheck style={{ marginLeft: "90%" }} />
+                          )
+                        ) : null}
+                      </p>
                     </Fragment>
                   }
                 </div>
               </li>
             ))}
-            <div ref={this.messagesEndRef} />
+            <div className={classes.TypingIndicator}>
+              {this.state.otherPersonIsTyping
+                ? `${this.state.friendInfo.username} is typing...`
+                : ""}
+            </div>
           </ul>
+          <div ref={this.messagesEndRef}></div>
         </div>
         <div className={classes.textForm}>
           <input
