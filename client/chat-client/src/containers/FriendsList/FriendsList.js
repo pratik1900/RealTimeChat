@@ -19,6 +19,7 @@ class FriendsList extends Component {
     this.getFriends();
 
     this.context.on("message", () => {
+      console.log("PING")
       this.getFriends();
     })
   }
@@ -46,7 +47,7 @@ class FriendsList extends Component {
       .then(result => {
         let roomId = result.data.conversation._id;
         this.props.setRoomIdHandler(roomId);
-        this.context.emit("join", { roomId: roomId });
+        // this.context.emit("join", { roomId: roomId });
       })
       .catch(err => console.log(err));
     

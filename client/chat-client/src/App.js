@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import socketContext from "./contexts/socketContext";
 import currentUserContext from "./contexts/currentUserContext";
+import Welcome from './components/Welcome/Welcome';
 import Chatwindow from "./containers/Chatwindow/Chatwindow";
 import Login from "./containers/Login/Login";
 import Register from "./containers/Register/Register";
@@ -21,7 +22,8 @@ class App extends Component {
   state = {
     isLoggedIn: false,
     currentUser: null, //to store current logged in user info
-    roomId: null
+    roomId: null,
+    displayWelcome: true
   }
 
   componentDidMount() {
@@ -35,7 +37,10 @@ class App extends Component {
       this.setState({
         isLoggedIn: result.data.authStatus,
         currentUser: result.data.currentUser
-      }, () => console.log("START UP:", this.state.currentUser))
+      }, () => {
+        console.log(this.state.currentUser.friends[0])
+        this.joinAllRooms()
+      })
     })
     .catch(err => console.log(err))
   }
@@ -50,6 +55,14 @@ class App extends Component {
     this.setState({ roomId: roomId });
   }
 
+  joinAllRooms = () => {
+    axios.post("/joinAllRooms", { currentUser: this.state.currentUser})
+    .then(response => {
+      socket.emit("joinAllRooms", { allConvoIds: response.data.allConvoIds });
+    })
+    .catch(err => console.log(err))
+  }
+
   render() {
     return (
       <Router>
@@ -61,14 +74,19 @@ class App extends Component {
                 loggedInHandler={this.loggedInHandler}
                 setRoomIdHandler={this.setRoomIdHandler}
               />
-
-              {/* passing socket to chatwindow as a prope (instead of using context) as its already using another context */}
+              <Route path="/" exact>
+                <Welcome currentUser={this.state.currentUser} />
+              </Route>
+              {/* passing socket to chatwindow as a prop (instead of using context) as its already using another context */}
               <Route path="/chat/:friendId" exact>
                 <Chatwindow socket={socket} roomId={this.state.roomId} />
               </Route>
 
               <Route path="/login">
-                <Login loggedInHandler={this.loggedInHandler} setAuthStatus={this.setAuthStatus} />
+                <Login
+                  loggedInHandler={this.loggedInHandler}
+                  setAuthStatus={this.setAuthStatus}
+                />
               </Route>
 
               <Route path="/logout">

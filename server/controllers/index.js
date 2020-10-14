@@ -46,7 +46,6 @@ module.exports.getFriends = (req, res) => {
         res.status(200).json({
           friends: friendsWithCount,
         });
-        // console.log("FRIENDS WITH COUNT: ", friendsWithCount);
       })
       .catch(err => console.log(err));
     }
@@ -55,13 +54,28 @@ module.exports.getFriends = (req, res) => {
 }
 
 module.exports.getLatestConversations = (req, res) => {
-  Conversation.find({participants: req.session.user })
+  Conversation.find({participants: { $size: 2, $in: req.session.user } })
   .then(conversations => {
     if (conversations){
       const convos = conversations.sort((a, b) => {
-        return a.messages[a.messages.length - 1].sentAt - b.messages[b.messages.length - 1].sentAt;
+        return b.messages[b.messages.length - 1].sentAt - a.messages[a.messages.length - 1].sentAt ;
       });
-      res.status(200).json({ convos: convos })
+      const friendIds = convos.map(convo => {
+        return convo.participants.find(p => !p.equals(req.session.user))
+      });
+
+      const friends = friendIds.map(friendId => {
+        return User.findOne({ _id: friendId })
+          .then(friend => {
+            return friend;
+          })
+          .catch(err => console.log(err));
+      });
+
+      Promise.all(friends).then(results => {
+        console.log("RESULTS:", results)
+        res.status(200).json({ friends: results });
+      })
     }
   })
   .catch(err => console.log(err))
@@ -349,3 +363,14 @@ module.exports.setTextStatustoSeenAll = (req, res) => {
     })
     .catch(err => console.log(err));
 };
+
+module.exports.joinAllRooms = (req, res) => {
+  const { currentUser } = req.body;
+  Conversation.find({ participants: { $size: 2, $in: [currentUser] } })
+  .then(convos => {
+    const allConvoIds = convos.map(convo => convo._id)
+    res.json({ allConvoIds: allConvoIds });
+  })
+  .catch(err => console.log(err))
+}
+

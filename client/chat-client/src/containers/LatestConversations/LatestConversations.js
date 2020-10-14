@@ -13,18 +13,21 @@ class FriendsList extends Component {
 
   componentDidMount() {
     this.getLatestConversations();
+
+    this.context.on("message", () => {
+      this.getLatestConversations();
+    })
   }
 
   getLatestConversations = () => {
     axios
       .get("/getLatestConversations")
       .then(result => {
-        console.log(result.data.friends);
         const { friends } = result.data;
-        console.log("Friends:", friends);
+        console.log("CONVOS:", friends);
         this.setState({
           friends: friends,
-        });
+        }, () => console.log(this.state));
       })
       .catch(err => console.log(err));
   };

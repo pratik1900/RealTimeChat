@@ -109,6 +109,7 @@ router.post("/sendText", controllers.sendText);
 router.post("/getConversationId", controllers.getConversationId);
 router.post("/setTextStatustoSeen", controllers.setTextStatustoSeen);
 router.post("/setTextStatustoSeenAll", controllers.setTextStatustoSeenAll);
+router.post("/joinAllRooms", controllers.joinAllRooms);
 
 router.post(
   "/changeProfileInfo",

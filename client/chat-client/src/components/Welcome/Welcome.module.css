@@ -1,0 +1,13 @@
+.Welcome {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Welcome h1 {
+  color: rgb(179, 50, 50);
+  font-family: monospace;
+  font-size: 4rem;
+
+}

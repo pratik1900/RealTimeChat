@@ -68,8 +68,14 @@ mongoose
     io.getIO().on("connect", socket => { 
       socket.on("join", data => {
         socket.join(data.roomId);
-        socket.emit()
+        // socket.emit()
       });
+
+      socket.on("joinAllRooms", data => {
+        data.allConvoIds.map(convoId => {
+          socket.join(convoId);
+        })
+      })
 
       socket.on("message", data => {
         const { sender, recipient, roomId, msg, msgId } = data;
