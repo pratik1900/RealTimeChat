@@ -13,6 +13,7 @@ import Profile from "./containers/Profile/Profile";
 import ManageFriends from "./containers/ManageFriends/ManageFriends";
 import io from "socket.io-client";
 
+console.log("XXX:",window.location)
 const socket = io("http://localhost:5000/"); //initiating socket connection
 console.log("INSTANCE: ", socket)
 
@@ -38,7 +39,7 @@ class App extends Component {
         isLoggedIn: result.data.authStatus,
         currentUser: result.data.currentUser
       }, () => {
-        console.log(this.state.currentUser.friends[0])
+        // console.log(this.state.currentUser.friends[0])
         this.joinAllRooms()
       })
     })
@@ -75,7 +76,7 @@ class App extends Component {
                 setRoomIdHandler={this.setRoomIdHandler}
               />
               <Route path="/" exact>
-                <Welcome currentUser={this.state.currentUser} />
+                <Welcome currentUser={this.state.currentUser} isLoggedIn={this.state.isLoggedIn} />
               </Route>
               {/* passing socket to chatwindow as a prop (instead of using context) as its already using another context */}
               <Route path="/chat/:friendId" exact>

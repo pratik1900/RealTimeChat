@@ -48,15 +48,18 @@ class Chatwindow extends Component {
     //SETTING UP SOCKET LISTENERS
     this.props.socket.on("message", socket => {
       const { sender, recipient, roomId, msg, msgId } = socket;
-      this.setTextStatusToSeen(sender, recipient, roomId,  msg, msgId);
-      this.getConversations();
+      if(roomId === this.state.roomId) {
+        this.setTextStatusToSeen(sender, recipient, roomId, msg, msgId);
+      }
+      this.getConversations(true);
     });
 
     this.props.socket.on("typingStatusChange", socket => {
-      console.log("OTHER PERSON:", socket);
-      this.setState({
-        otherPersonIsTyping: socket.typingStatus,
-      });
+      if(socket.roomId === this.state.roomId){
+        this.setState({
+          otherPersonIsTyping: socket.typingStatus,
+        });
+      }
     });
 
     this.props.socket.on("setTextStatusToSeen", socket => {
@@ -127,7 +130,7 @@ class Chatwindow extends Component {
           };
         });
         //loads latest chat state for sender
-        this.getConversations();
+        this.getConversations(true);
       })
       .catch(err => console.log("CAUGHT:", err));
   };

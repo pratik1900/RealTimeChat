@@ -91,7 +91,8 @@ mongoose
       socket.on("typingStatusChange", data => {
         const { typingStatus, roomId } = data;
         socket.to(`${roomId}`).emit("typingStatusChange", {
-          typingStatus: typingStatus
+          typingStatus: typingStatus,
+          roomId: roomId
         });
       });
 
